@@ -9,6 +9,17 @@ const getApiBaseUrl = (): string => {
     // If VITE_API_URL is set, use it (production)
     return apiUrl;
   }
+  
+  // In production (not localhost), warn if VITE_API_URL is not set
+  if (typeof window !== "undefined" && !window.location.hostname.includes("localhost")) {
+    console.error(
+      "⚠️ VITE_API_URL is not configured! " +
+      "Please set VITE_API_URL environment variable in Vercel. " +
+      "Current API calls will fail. " +
+      "Expected: https://ai-assist-backend-ex3q.onrender.com"
+    );
+  }
+  
   // Otherwise use proxy (development)
   return "/api";
 };
