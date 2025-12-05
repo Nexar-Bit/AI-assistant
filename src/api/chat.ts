@@ -19,7 +19,7 @@ export async function fetchChatThreads(params?: {
   offset?: number;
 }): Promise<ChatThreadListResponse> {
   const { data } = await axiosClient.get<ChatThreadListResponse>(
-    "/v1/chat/threads",
+    "/api/v1/chat/threads",
     { params },
   );
   return data;
@@ -29,7 +29,7 @@ export async function createChatThread(
   payload: CreateChatThreadRequest,
 ): Promise<ChatThread> {
   const { data } = await axiosClient.post<ChatThread>(
-    "/v1/chat/threads",
+    "/api/v1/chat/threads",
     payload,
   );
   return data;
@@ -37,7 +37,7 @@ export async function createChatThread(
 
 export async function getChatThread(threadId: string): Promise<ChatThreadResponse> {
   const { data } = await axiosClient.get<ChatThreadResponse>(
-    `/v1/chat/threads/${threadId}`,
+    `/api/v1/chat/threads/${threadId}`,
   );
   return data;
 }
@@ -47,7 +47,7 @@ export async function sendMessage(
   payload: SendMessageRequest,
 ): Promise<SendMessageResponse> {
   const { data } = await axiosClient.post<SendMessageResponse>(
-    `/v1/chat/threads/${threadId}/messages`,
+    `/api/v1/chat/threads/${threadId}/messages`,
     payload,
   );
   return data;

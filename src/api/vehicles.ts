@@ -21,7 +21,7 @@ export interface Vehicle {
 }
 
 export async function getVehicle(vehicleId: string): Promise<Vehicle> {
-  const { data } = await axiosClient.get<Vehicle>(`/v1/vehicles/${vehicleId}`);
+  const { data } = await axiosClient.get<Vehicle>(`/api/v1/vehicles/${vehicleId}`);
   return data;
 }
 
@@ -30,14 +30,14 @@ export async function fetchVehicles(params?: {
   license_plate?: string;
 }): Promise<{ vehicles: Vehicle[] }> {
   const { data } = await axiosClient.get<{ vehicles: Vehicle[] }>(
-    "/v1/vehicles/",
+    "/api/v1/vehicles/",
     { params }
   );
   return data;
 }
 
 export async function searchVehicles(licensePlate: string): Promise<Vehicle[]> {
-  const { data } = await axiosClient.get<Vehicle[]>("/v1/vehicles/", {
+  const { data } = await axiosClient.get<Vehicle[]>("/api/v1/vehicles/", {
     params: { license_plate: licensePlate },
   });
   return data;
@@ -57,7 +57,7 @@ export async function createVehicle(payload: {
   engine_type?: string;
   fuel_type?: string;
 }): Promise<Vehicle> {
-  const { data } = await axiosClient.post<Vehicle>("/v1/vehicles/", payload);
+  const { data } = await axiosClient.post<Vehicle>("/api/v1/vehicles/", payload);
   return data;
 }
 

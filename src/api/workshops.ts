@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 import type { Workshop, WorkshopListResponse } from "../types/workshop.types";
 
 export async function fetchWorkshops(): Promise<WorkshopListResponse> {
-  const { data } = await axiosClient.get<WorkshopListResponse>("/v1/workshops/");
+  const { data } = await axiosClient.get<WorkshopListResponse>("/api/v1/workshops/");
   return data;
 }
 
@@ -12,12 +12,12 @@ export async function createWorkshop(payload: {
   description?: string;
   monthly_token_limit?: number;
 }): Promise<Workshop> {
-  const { data } = await axiosClient.post<Workshop>("/v1/workshops/", payload);
+  const { data } = await axiosClient.post<Workshop>("/api/v1/workshops/", payload);
   return data;
 }
 
 export async function getWorkshop(workshopId: string): Promise<Workshop> {
-  const { data } = await axiosClient.get<Workshop>(`/v1/workshops/${workshopId}`);
+  const { data } = await axiosClient.get<Workshop>(`/api/v1/workshops/${workshopId}`);
   return data;
 }
 
@@ -26,7 +26,7 @@ export async function updateWorkshop(
   payload: Partial<Workshop>,
 ): Promise<Workshop> {
   const { data } = await axiosClient.put<Workshop>(
-    `/v1/workshops/${workshopId}`,
+    `/api/v1/workshops/${workshopId}`,
     payload,
   );
   return data;
@@ -50,7 +50,7 @@ export async function getWorkshopMembers(
   workshopId: string,
 ): Promise<WorkshopMembersResponse> {
   const { data } = await axiosClient.get<WorkshopMembersResponse>(
-    `/v1/workshops/${workshopId}/members`,
+    `/api/v1/workshops/${workshopId}/members`,
   );
   return data;
 }
@@ -68,7 +68,7 @@ export async function updateWorkshopCustomization(
   payload: WorkshopCustomizationUpdate,
 ): Promise<Workshop> {
   const { data } = await axiosClient.put<Workshop>(
-    `/v1/workshops/${workshopId}/customization`,
+    `/api/v1/workshops/${workshopId}/customization`,
     payload,
   );
   return data;

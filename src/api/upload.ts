@@ -14,7 +14,7 @@ export interface FileInfo {
 
 export async function uploadChatAttachment(formData: FormData): Promise<FileInfo> {
   const { data } = await axiosClient.post<FileInfo>(
-    "/v1/upload/chat-attachment",
+    "/api/v1/upload/chat-attachment",
     formData,
     {
       headers: {
@@ -26,6 +26,6 @@ export async function uploadChatAttachment(formData: FormData): Promise<FileInfo
 }
 
 export async function deleteFile(filename: string): Promise<void> {
-  await axiosClient.delete(`/v1/upload/files/${filename}`);
+  await axiosClient.delete(`/api/v1/upload/files/${filename}`);
 }
 

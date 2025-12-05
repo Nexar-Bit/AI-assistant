@@ -19,7 +19,7 @@ export function useVehicles() {
       setLoading(true);
       setError(null);
       try {
-        const { data } = await axiosClient.get<VehicleSummary[]>("/v1/vehicles/");
+        const { data } = await axiosClient.get<VehicleSummary[]>("/api/v1/vehicles/");
         setVehicles(data);
       } catch (err) {
         console.error(err);
