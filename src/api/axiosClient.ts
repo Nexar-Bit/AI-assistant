@@ -2,8 +2,19 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { useAuthStore } from "../stores/auth.store";
 import { refreshTokenApi } from "./auth";
 
+// Get API URL from environment variable or use proxy in development
+const getApiBaseUrl = (): string => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (apiUrl) {
+    // If VITE_API_URL is set, use it (production)
+    return apiUrl;
+  }
+  // Otherwise use proxy (development)
+  return "/api";
+};
+
 const axiosClient = axios.create({
-  baseURL: "/api",
+  baseURL: getApiBaseUrl(),
   withCredentials: true,
 });
 

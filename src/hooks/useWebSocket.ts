@@ -43,9 +43,21 @@ export function useWebSocket({
     }
 
     // Build WebSocket URL
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const host = window.location.host;
-    const wsUrl = `${protocol}//${host}/api/v1/ws/chat/${threadId}?token=${accessToken}`;
+    const getWebSocketUrl = (): string => {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (apiUrl) {
+        // Production: use the API URL from environment
+        const wsProtocol = apiUrl.startsWith("https") ? "wss" : "ws";
+        const wsHost = apiUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
+        return `${wsProtocol}://${wsHost}/api/v1/ws/chat/${threadId}?token=${accessToken}`;
+      }
+      // Development: use proxy
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const host = window.location.host;
+      return `${protocol}//${host}/api/v1/ws/chat/${threadId}?token=${accessToken}`;
+    };
+
+    const wsUrl = getWebSocketUrl();
 
     try {
       const ws = new WebSocket(wsUrl);
