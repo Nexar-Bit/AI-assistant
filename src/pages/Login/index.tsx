@@ -30,9 +30,17 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div 
+      className="flex min-h-screen items-center justify-center p-4"
+      style={{
+        backgroundImage: "url('/Back.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="w-full max-w-md animate-fade-in">
-        <div className="card-hover gradient-border">
+        <div className="card-hover gradient-border bg-slate-950/90 backdrop-blur-sm">
           <div className="flex items-center gap-3 mb-6">
             <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-glow">
               <svg
