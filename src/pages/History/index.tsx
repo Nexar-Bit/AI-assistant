@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchChatThreads, updateChatThread } from "../../api/chat";
+import { fetchChatThreads, updateChatThread, deleteChatThread } from "../../api/chat";
 import { useWorkshopStore } from "../../stores/workshop.store";
 import { useNotification } from "../../components/layout/NotificationProvider";
 import { formatDateTime } from "../../utils/formatters";
@@ -8,7 +8,7 @@ import type { ChatThread } from "../../types/chat.types";
 
 export function HistoryPage() {
   const { currentWorkshop } = useWorkshopStore();
-  const { showCritical } = useNotification();
+  const { showCritical, showSuccess, showWarning } = useNotification();
   const [threads, setThreads] = useState<ChatThread[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -232,6 +232,13 @@ export function HistoryPage() {
             >
               Mark Resolved ({selected.size})
             </button>
+            <button
+              onClick={handleBulkDelete}
+              disabled={selected.size === 0}
+              className="btn-secondary text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Delete ({selected.size})
+            </button>
           </div>
         </div>
       </div>
@@ -330,12 +337,21 @@ export function HistoryPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <Link
-                      to={`/chat?thread=${thread.id}`}
-                      className="text-xs text-primary-400 hover:text-primary-300 transition-colors"
-                    >
-                      View
-                    </Link>
+                    <div className="flex items-center gap-3">
+                      <Link
+                        to={`/chat?thread=${thread.id}`}
+                        className="text-xs text-primary-400 hover:text-primary-300 transition-colors"
+                      >
+                        View
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(thread.id, thread.license_plate)}
+                        className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                        title="Delete chat history"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

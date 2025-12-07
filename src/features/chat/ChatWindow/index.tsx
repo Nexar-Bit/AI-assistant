@@ -23,6 +23,8 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
     error,
     clearError,
     sendMessage,
+    updateThreadStatus,
+    deleteThread,
     errorCodes,
     setErrorCodes,
     estimatedTokens,
@@ -45,10 +47,12 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
         currentKm={thread.vehicle_km || undefined}
         engineType={thread.vehicle_context?.match(/Engine Type: (.+)/)?.[1]}
         errorCodes={thread.error_codes || undefined}
-        status={thread.status as "active" | "resolved" | "archived"}
+        status={thread.status === "completed" ? "resolved" : (thread.status as "active" | "resolved" | "archived")}
         threadId={thread.id}
         createdAt={thread.created_at}
         tokenUsage={tokenUsage}
+        onStatusChange={updateThreadStatus}
+        onDelete={deleteThread}
       />
 
       {/* Messages */}

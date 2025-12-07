@@ -69,6 +69,10 @@ export async function updateChatThread(
   return data;
 }
 
+export async function deleteChatThread(threadId: string): Promise<void> {
+  await axiosClient.delete(`/api/v1/chat/threads/${threadId}`);
+}
+
 export interface DashboardStats {
   total_consultations: number;
   tokens_used_this_month: number;

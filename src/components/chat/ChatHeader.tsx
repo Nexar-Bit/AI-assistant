@@ -33,6 +33,8 @@ interface ChatHeaderProps {
   onAttach?: () => void;
   onTemplate?: () => void;
   onHistory?: () => void;
+  onStatusChange?: (status: "active" | "completed" | "archived", isResolved?: boolean) => void;
+  onDelete?: () => void;
 }
 
 export function ChatHeader({
@@ -50,8 +52,11 @@ export function ChatHeader({
   onAttach,
   onTemplate,
   onHistory,
+  onStatusChange,
+  onDelete,
 }: ChatHeaderProps) {
   const [elapsedTime, setElapsedTime] = useState<string>("0m");
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
 
   // Calculate real-time elapsed duration
   useEffect(() => {
@@ -83,6 +88,7 @@ export function ChatHeader({
       case "active":
         return "text-warning-400";
       case "resolved":
+      case "completed":
         return "text-success-400";
       case "archived":
         return "text-industrial-400";
@@ -96,6 +102,7 @@ export function ChatHeader({
       case "active":
         return "bg-warning-500/10 border-warning-500/30";
       case "resolved":
+      case "completed":
         return "bg-success-500/10 border-success-500/30";
       case "archived":
         return "bg-industrial-500/10 border-industrial-500/30";
@@ -109,6 +116,7 @@ export function ChatHeader({
       case "active":
         return "IN PROGRESS";
       case "resolved":
+      case "completed":
         return "RESOLVED";
       case "archived":
         return "ARCHIVED";
@@ -172,12 +180,80 @@ export function ChatHeader({
             </>
           )}
           
-          {/* Status */}
-          <div className="flex items-center gap-1.5">
+          {/* Status - Clickable to change */}
+          <div className="flex items-center gap-1.5 relative">
             <span className="text-primary-400 text-base">🚦</span>
-            <span className={`px-2 py-0.5 rounded border text-xs font-semibold whitespace-nowrap ${getStatusBg()} ${getStatusColor()}`}>
-              STATUS: {getStatusText()}
-            </span>
+            {onStatusChange && threadId ? (
+              <div className="relative">
+                <button
+                  onClick={() => setShowStatusMenu(!showStatusMenu)}
+                  className={`px-2 py-0.5 rounded border text-xs font-semibold whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity ${getStatusBg()} ${getStatusColor()} flex items-center gap-1`}
+                  title="Click to change status"
+                >
+                  STATUS: {getStatusText()}
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showStatusMenu && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setShowStatusMenu(false)}
+                    />
+                    <div className="absolute top-full left-0 mt-1 bg-industrial-800 border border-industrial-700 rounded-lg shadow-lg z-20 min-w-[180px]">
+                      <button
+                        onClick={() => {
+                          onStatusChange("active", false);
+                          setShowStatusMenu(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-xs hover:bg-industrial-700 transition-colors first:rounded-t-lg ${
+                          status === "active" ? "bg-primary-500/20 text-primary-300" : "text-industrial-200"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-warning-400"></span>
+                          In Progress
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          onStatusChange("completed", true);
+                          setShowStatusMenu(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-xs hover:bg-industrial-700 transition-colors ${
+                          status === "resolved" || status === "completed" ? "bg-success-500/20 text-success-300" : "text-industrial-200"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-success-400"></span>
+                          Complete / Resolved
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          onStatusChange("archived", false);
+                          setShowStatusMenu(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-xs hover:bg-industrial-700 transition-colors last:rounded-b-lg ${
+                          status === "archived" ? "bg-industrial-500/20 text-industrial-300" : "text-industrial-200"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-industrial-400"></span>
+                          Archived
+                        </div>
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <span className={`px-2 py-0.5 rounded border text-xs font-semibold whitespace-nowrap ${getStatusBg()} ${getStatusColor()}`}>
+                STATUS: {getStatusText()}
+              </span>
+            )}
           </div>
           
           {/* Duration */}
@@ -190,6 +266,23 @@ export function ChatHeader({
                   <span className="text-industrial-400">⏱️</span> {elapsedTime} elapsed
                 </span>
               </div>
+            </>
+          )}
+          
+          {/* Delete Button */}
+          {onDelete && threadId && (
+            <>
+              <span className="text-industrial-600">|</span>
+              <button
+                onClick={onDelete}
+                className="text-xs text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+                title="Delete this chat"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Delete
+              </button>
             </>
           )}
         </div>

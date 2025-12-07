@@ -2,9 +2,10 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useWebSocket } from "../../../hooks/useWebSocket";
-import { getChatThread, sendMessage as sendMessageApi, createChatThread } from "../../../api/chat";
+import { getChatThread, sendMessage as sendMessageApi, createChatThread, updateChatThread, deleteChatThread } from "../../../api/chat";
 import { useWorkshopStore } from "../../../stores/workshop.store";
 import { useAuthStore } from "../../../stores/auth.store";
+import { useNotification } from "../../../components/layout/NotificationProvider";
 import type { ChatThread, ChatMessage } from "../../../types/chat.types";
 
 interface ChatContextValue {
@@ -31,6 +32,8 @@ interface ChatContextValue {
     error_codes?: string;
     vehicle_context?: string;
   }) => Promise<ChatThread>;
+  updateThreadStatus: (status: "active" | "completed" | "archived", isResolved?: boolean) => Promise<void>;
+  deleteThread: () => Promise<void>;
   
   // Error codes
   errorCodes: string[];
@@ -66,6 +69,7 @@ interface ChatProviderProps {
 export function ChatProvider({ children }: ChatProviderProps) {
   const { currentWorkshop } = useWorkshopStore();
   const { accessToken } = useAuthStore();
+  const { showSuccess, showCritical } = useNotification();
   const [currentThread, setCurrentThread] = useState<ChatThread | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -237,6 +241,54 @@ export function ChatProvider({ children }: ChatProviderProps) {
     setError(null);
   }, []);
 
+  const updateThreadStatus = useCallback(async (
+    status: "active" | "completed" | "archived",
+    isResolved?: boolean
+  ) => {
+    if (!currentThread) return;
+
+    try {
+      const updated = await updateChatThread(currentThread.id, {
+        status,
+        is_resolved: isResolved !== undefined ? isResolved : (status === "completed"),
+      });
+      
+      // Update current thread with new status
+      setCurrentThread(updated);
+      showSuccess(
+        `Chat status updated to ${status === "active" ? "In Progress" : status === "completed" ? "Completed" : "Archived"}`,
+        "Status Updated"
+      );
+    } catch (err: any) {
+      console.error("Failed to update thread status:", err);
+      showCritical(
+        err.response?.data?.detail || "Failed to update chat status",
+        "Error"
+      );
+    }
+  }, [currentThread, showSuccess, showCritical]);
+
+  const deleteThread = useCallback(async () => {
+    if (!currentThread) return;
+
+    if (!confirm(`Are you sure you want to delete this chat history for ${currentThread.license_plate}? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await deleteChatThread(currentThread.id);
+      setCurrentThread(null);
+      setMessages([]);
+      showSuccess("Chat history deleted successfully", "Deleted");
+    } catch (err: any) {
+      console.error("Failed to delete thread:", err);
+      showCritical(
+        err.response?.data?.detail || "Failed to delete chat history",
+        "Error"
+      );
+    }
+  }, [currentThread, showSuccess, showCritical]);
+
   const value: ChatContextValue = {
     currentThread,
     setCurrentThread,
@@ -248,6 +300,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
     typingUsers,
     sendMessage,
     createSession,
+    updateThreadStatus,
+    deleteThread,
     errorCodes,
     setErrorCodes,
     estimatedTokens,
