@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getDashboardStats } from "../../api/chat";
 import { useWorkshopStore } from "../../stores/workshop.store";
+import { usePermissions } from "../../hooks/usePermissions";
+import { ViewerDashboard } from "./ViewerDashboard";
 import type { DashboardStats } from "../../api/chat";
 
 export function DashboardPage() {
   const { currentWorkshop } = useWorkshopStore();
+  const { canAccess, currentWorkshopRole } = usePermissions();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Check if user is a viewer - must be after all hooks
+  const isViewer = currentWorkshopRole === "viewer" || (!canAccess.chat && !canAccess.vehicles && !canAccess.history);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -44,6 +50,12 @@ export function DashboardPage() {
 
     loadStats();
   }, [currentWorkshop]);
+
+  // If user is a viewer, show the viewer-specific dashboard
+  // This check must be after all hooks to comply with Rules of Hooks
+  if (isViewer) {
+    return <ViewerDashboard />;
+  }
 
   return (
     <div className="space-y-6 animate-fade-in p-6">

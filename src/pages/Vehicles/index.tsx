@@ -3,6 +3,7 @@ import { fetchVehicles, createVehicle, updateVehicle, deleteVehicle, searchVehic
 import { useWorkshopStore } from "../../stores/workshop.store";
 import { useNotification } from "../../components/layout/NotificationProvider";
 import { formatDateTime } from "../../utils/formatters";
+import { PermissionGate } from "../../components/common/PermissionGate";
 import type { Vehicle } from "../../api/vehicles";
 
 export function VehiclesPage() {
@@ -303,18 +304,22 @@ export function VehiclesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => startEdit(vehicle)}
-                        className="text-xs text-primary-400 hover:text-primary-300 transition-colors"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(vehicle.id)}
-                        className="text-xs text-red-400 hover:text-red-300 transition-colors"
-                      >
-                        Delete
-                      </button>
+                      <PermissionGate permission="editVehicle">
+                        <button
+                          onClick={() => startEdit(vehicle)}
+                          className="text-xs text-primary-400 hover:text-primary-300 transition-colors"
+                        >
+                          Edit
+                        </button>
+                      </PermissionGate>
+                      <PermissionGate permission="deleteVehicle">
+                        <button
+                          onClick={() => handleDelete(vehicle.id)}
+                          className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                        >
+                          Delete
+                        </button>
+                      </PermissionGate>
                     </div>
                   </td>
                 </tr>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useWorkshopStore } from "../../../stores/workshop.store";
+import { PermissionGate } from "../../common/PermissionGate";
 // Modern icon components (inline SVGs - latest design)
 const HomeIcon = ({ className = "", size = 24 }: { className?: string; size?: number }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -65,36 +66,42 @@ const navItems = [
     label: "Dashboard",
     icon: HomeIcon,
     gradient: "from-blue-500 to-cyan-500",
+    permission: "dashboard" as const,
   },
   {
     to: "/chat",
     label: "Chat",
     icon: MessageSquareIcon,
     gradient: "from-purple-500 to-pink-500",
+    permission: "chat" as const,
   },
   {
     to: "/history",
     label: "History",
     icon: ClockIcon,
     gradient: "from-orange-500 to-amber-500",
+    permission: "history" as const,
   },
   {
     to: "/vehicles",
     label: "Vehicles",
     icon: CarIcon,
     gradient: "from-green-500 to-emerald-500",
+    permission: "vehicles" as const,
   },
   {
     to: "/team",
     label: "Team",
     icon: UsersIcon,
     gradient: "from-indigo-500 to-blue-500",
+    permission: "team" as const,
   },
   {
     to: "/settings",
     label: "Settings",
     icon: SettingsIcon,
     gradient: "from-gray-500 to-slate-500",
+    permission: "settings" as const,
   },
 ];
 
@@ -212,9 +219,13 @@ export function Sidebar() {
         {navItems.map((item) => {
           const IconComponent = item.icon;
           return (
-            <div
+            <PermissionGate
               key={item.to}
-              className="relative group"
+              permission={item.permission}
+              showNothing={true}
+            >
+              <div
+                className="relative group"
               onMouseEnter={() => {
                 // Clear any existing timeout
                 if (hoverTimeoutRef.current) {
@@ -292,6 +303,7 @@ export function Sidebar() {
                 </div>
               )}
             </div>
+            </PermissionGate>
           );
         })}
       </nav>

@@ -5,6 +5,7 @@ import { NotificationProvider } from "./components/layout/NotificationProvider";
 import { AppLayout } from "./components/layout/AppLayout";
 import { LoginPage } from "./pages/Login";
 import { SignupPage } from "./pages/Signup";
+import { VerifyEmailPage } from "./pages/VerifyEmail";
 import { DashboardPage } from "./pages/Dashboard";
 import { ConsultationPage } from "./pages/Consultation";
 import { HistoryPage } from "./pages/History";
@@ -13,6 +14,8 @@ import { ChatPage } from "./features/chat";
 import { VehiclesPage } from "./pages/Vehicles";
 import { TeamPage } from "./pages/Team";
 import { SettingsPage } from "./pages/Settings";
+import { ViewerDemo } from "./pages/RoleDemo/ViewerDemo";
+import { ProtectedRoute } from "./components/routing/ProtectedRoute";
 import { useAuthStore } from "./stores/auth.store";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -38,7 +41,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/verify-email" element={<SignupPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
             
             {/* Protected Routes with AppLayout */}
             <Route
@@ -49,13 +52,63 @@ function App() {
               }
             >
               <Route path="/" element={<DashboardPage />} />
-              <Route path="/chat" element={<ChatPage />} />
+              <Route 
+                path="/chat" 
+                element={
+                  <ProtectedRoute requiredPermission="chat">
+                    <ChatPage />
+                  </ProtectedRoute>
+                } 
+              />
               <Route path="/consultation" element={<ConsultationPage />} />
-              <Route path="/history" element={<HistoryPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/vehicles" element={<VehiclesPage />} />
-              <Route path="/team" element={<TeamPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route 
+                path="/history" 
+                element={
+                  <ProtectedRoute requiredPermission="history">
+                    <HistoryPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/vehicles" 
+                element={
+                  <ProtectedRoute requiredPermission="vehicles">
+                    <VehiclesPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/team" 
+                element={
+                  <ProtectedRoute requiredPermission="team">
+                    <TeamPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute requiredPermission="settings">
+                    <SettingsPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/demo/viewer" 
+                element={
+                  <ProtectedRoute>
+                    <ViewerDemo />
+                  </ProtectedRoute>
+                } 
+              />
             </Route>
             
             {/* Catch all */}

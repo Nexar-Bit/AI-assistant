@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { LoginResponse } from "../types/api.types";
+import type { LoginResponse, UserInfo } from "../types/api.types";
 
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
+  user: UserInfo | null;
   setTokens: (tokens: LoginResponse) => void;
   logout: () => void;
   refreshAccessToken: (newAccessToken: string) => void;
@@ -20,11 +21,13 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
+      user: null,
       setTokens: (tokens) =>
         set({
           accessToken: tokens.access_token,
           refreshToken: tokens.refresh_token || null,
           isAuthenticated: !!tokens.access_token,
+          user: tokens.user || null,
         }),
       refreshAccessToken: (newAccessToken) =>
         set({
@@ -36,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
           accessToken: null,
           refreshToken: null,
           isAuthenticated: false,
+          user: null,
         }),
       loadTokensFromStorage: () => {
         // This is handled automatically by persist middleware,
@@ -49,6 +53,7 @@ export const useAuthStore = create<AuthState>()(
               accessToken: state.accessToken || null,
               refreshToken: state.refreshToken || null,
               isAuthenticated: !!state.accessToken,
+              user: state.user || null,
             });
           } catch (e) {
             console.error("Failed to load tokens from storage", e);
@@ -62,6 +67,7 @@ export const useAuthStore = create<AuthState>()(
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         isAuthenticated: !!state.accessToken, // Ensure isAuthenticated matches token presence
+        user: state.user,
       }),
       onRehydrateStorage: () => (state) => {
         // When state is rehydrated from localStorage, ensure isAuthenticated matches token

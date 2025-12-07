@@ -4,6 +4,7 @@ import { useWorkshopStore } from "../../stores/workshop.store";
 import { useNotification } from "../../components/layout/NotificationProvider";
 import { useAuthStore } from "../../stores/auth.store";
 import { formatDateTime } from "../../utils/formatters";
+import { PermissionGate } from "../../components/common/PermissionGate";
 import type { WorkshopMember } from "../../api/workshops";
 
 // Helper to decode JWT and get user ID
@@ -168,17 +169,19 @@ export function TeamPage() {
             Manage workshop team members and roles
           </p>
         </div>
-        {canAddMember() && (
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="btn-primary flex items-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Add Member
-          </button>
-        )}
+        <PermissionGate permission="addTeamMember">
+          {canAddMember() && (
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="btn-primary flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add Member
+            </button>
+          )}
+        </PermissionGate>
       </div>
 
       {error && (
@@ -299,22 +302,26 @@ export function TeamPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      {canEdit(member) && (
-                        <button
-                          onClick={() => startEdit(member)}
-                          className="text-xs text-primary-400 hover:text-primary-300 transition-colors"
-                        >
-                          Edit Role
-                        </button>
-                      )}
-                      {canRemove(member) && (
-                        <button
-                          onClick={() => handleRemoveMember(member)}
-                          className="text-xs text-red-400 hover:text-red-300 transition-colors"
-                        >
-                          Remove
-                        </button>
-                      )}
+                      <PermissionGate permission="updateTeamMemberRole">
+                        {canEdit(member) && (
+                          <button
+                            onClick={() => startEdit(member)}
+                            className="text-xs text-primary-400 hover:text-primary-300 transition-colors"
+                          >
+                            Edit Role
+                          </button>
+                        )}
+                      </PermissionGate>
+                      <PermissionGate permission="removeTeamMember">
+                        {canRemove(member) && (
+                          <button
+                            onClick={() => handleRemoveMember(member)}
+                            className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </PermissionGate>
                     </div>
                   </td>
                 </tr>

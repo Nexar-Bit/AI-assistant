@@ -3,8 +3,9 @@
 import React, { createContext, useContext, useEffect } from "react";
 import { useWorkshopStore } from "../stores/workshop.store";
 import { useAuthStore } from "../stores/auth.store";
-import { fetchWorkshops } from "../api/workshops";
+import { fetchWorkshops, getMyWorkshopRole } from "../api/workshops";
 import { useWorkshopTheme } from "../hooks/useWorkshopTheme";
+import type { WorkshopInfo } from "../types/api.types";
 
 interface WorkshopContextValue {
   currentWorkshop: ReturnType<typeof useWorkshopStore>["currentWorkshop"];
@@ -22,13 +23,42 @@ interface WorkshopProviderProps {
 }
 
 export function WorkshopProvider({ children }: WorkshopProviderProps) {
-  const { currentWorkshop, workshops, setCurrentWorkshop, setWorkshops } = useWorkshopStore();
-  const { isAuthenticated, accessToken } = useAuthStore();
+  const { currentWorkshop, workshops, setCurrentWorkshop, setWorkshops, setCurrentWorkshopRole } = useWorkshopStore();
+  const { isAuthenticated, accessToken, user } = useAuthStore();
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   
   // Apply workshop theme (primary color)
   useWorkshopTheme(currentWorkshop);
+
+  // Fetch current user's role in the selected workshop
+  React.useEffect(() => {
+    const fetchUserRole = async () => {
+      if (!currentWorkshop || !user) {
+        setCurrentWorkshopRole(null);
+        return;
+      }
+
+      try {
+        const roleData = await getMyWorkshopRole(currentWorkshop.id);
+        if (roleData && roleData.is_active) {
+          setCurrentWorkshopRole(roleData.role);
+        } else {
+          setCurrentWorkshopRole(null);
+        }
+      } catch (err: any) {
+        // Silently handle 403/404 - user might not be a member or endpoint might not exist
+        if (err.response?.status === 403 || err.response?.status === 404) {
+          setCurrentWorkshopRole(null);
+        } else {
+          console.error("Failed to fetch user role in workshop:", err);
+          setCurrentWorkshopRole(null);
+        }
+      }
+    };
+
+    fetchUserRole();
+  }, [currentWorkshop, user, setCurrentWorkshopRole]);
 
   const refreshWorkshops = async () => {
     // Only fetch if authenticated
@@ -54,6 +84,12 @@ export function WorkshopProvider({ children }: WorkshopProviderProps) {
       setIsLoading(false);
     }
   };
+
+  // Initialize workshops from login response if available
+  useEffect(() => {
+    // This will be called when user logs in and workshops are in the login response
+    // The login response workshops are already handled by the auth store
+  }, []);
 
   useEffect(() => {
     // Only fetch workshops when authenticated
