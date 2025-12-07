@@ -3,15 +3,20 @@ import { fetchChatThreads } from "../../api/chat";
 import { useWorkshopStore } from "../../stores/workshop.store";
 import type { ChatThread } from "../../types/chat.types";
 import { formatDateTime } from "../../utils/formatters";
+import type { SessionFilters } from "./SessionSearch";
 
 interface ChatThreadListProps {
   onSelectThread: (thread: ChatThread) => void;
   selectedThreadId?: string;
+  searchQuery?: string;
+  filters?: SessionFilters;
 }
 
 export function ChatThreadList({
   onSelectThread,
   selectedThreadId,
+  searchQuery,
+  filters,
 }: ChatThreadListProps) {
   const { currentWorkshop } = useWorkshopStore();
   const [threads, setThreads] = useState<ChatThread[]>([]);
@@ -25,7 +30,7 @@ export function ChatThreadList({
       const interval = setInterval(loadThreads, 30000);
       return () => clearInterval(interval);
     }
-  }, [currentWorkshop]);
+  }, [currentWorkshop, searchQuery, filters]);
 
   const loadThreads = async () => {
     if (!currentWorkshop) return;
@@ -33,10 +38,26 @@ export function ChatThreadList({
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchChatThreads({
+      const params: any = {
         workshop_id: currentWorkshop.id,
         is_archived: false,
-      });
+      };
+
+      // Apply filters
+      if (filters?.status && filters.status !== "all") {
+        params.status = filters.status;
+      }
+      if (filters?.is_resolved !== null && filters?.is_resolved !== undefined) {
+        params.is_resolved = filters.is_resolved;
+      }
+      if (filters?.license_plate) {
+        params.license_plate = filters.license_plate;
+      }
+      if (searchQuery) {
+        params.search = searchQuery;
+      }
+
+      const response = await fetchChatThreads(params);
       setThreads(response.threads);
     } catch (err: any) {
       console.error("Failed to load threads:", err);

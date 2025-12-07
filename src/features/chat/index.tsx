@@ -9,11 +9,15 @@ import { ContextPanel } from "../../components/chat/ContextPanel";
 import { UsageDashboard } from "../tokens/UsageDashboard";
 import { VehicleQuickEntry } from "../../components/vehicles/VehicleQuickEntry";
 import { ExpandableVehicleDetailsPanel } from "../../components/layout/VehicleDetailsPanel";
+import { useWorkshopStore } from "../../stores/workshop.store";
+import { useNotification } from "../../components/layout/NotificationProvider";
 import type { ChatThread } from "../../types/chat.types";
 import type { Vehicle } from "../../types/vehicle.types";
 
 function ChatPageContent() {
   const { currentThread, setCurrentThread, createSession } = useChatContext();
+  const { currentWorkshop } = useWorkshopStore();
+  const { showCritical, showWarning } = useNotification();
   const [showNewSessionForm, setShowNewSessionForm] = useState(false);
   const [errorCodes, setErrorCodes] = useState<string[]>([]);
   const [showSidebar, setShowSidebar] = useState(true);
@@ -43,6 +47,15 @@ function ChatPageContent() {
   }, [currentThread]);
 
   const handleVehicleSelect = async (vehicle: Vehicle) => {
+    // Check if workshop is selected before creating session
+    if (!currentWorkshop) {
+      showCritical(
+        "No workshop selected. Please select a workshop from the top menu before creating a session.",
+        "Workshop Required"
+      );
+      return;
+    }
+
     try {
       const vehicleContext = [
         vehicle.make && vehicle.model ? `${vehicle.make} ${vehicle.model}` : null,
@@ -65,6 +78,8 @@ function ChatPageContent() {
       setErrorCodes([]);
     } catch (err: any) {
       console.error("Failed to create session:", err);
+      const errorMessage = err.message || err.response?.data?.detail || "Failed to create session";
+      showCritical(errorMessage, "Session Creation Failed");
     }
   };
 

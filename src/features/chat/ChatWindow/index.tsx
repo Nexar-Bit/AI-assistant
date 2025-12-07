@@ -21,6 +21,7 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
     isLoading,
     typingUsers,
     error,
+    clearError,
     sendMessage,
     errorCodes,
     setErrorCodes,
@@ -79,8 +80,17 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
 
       {/* Error Display */}
       {error && (
-        <div className="px-6 py-3 bg-error-500/10 border-t border-error-500/30">
-          <p className="text-sm text-error-400">{error}</p>
+        <div className="px-6 py-3 bg-error-500/10 border-t border-error-500/30 flex items-center justify-between gap-4">
+          <p className="text-sm text-error-400 flex-1">{error}</p>
+          <button
+            onClick={clearError}
+            className="text-error-400 hover:text-error-300 transition-colors flex-shrink-0"
+            aria-label="Dismiss error"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
     </div>

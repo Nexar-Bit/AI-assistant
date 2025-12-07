@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { CarIcon, SearchIcon, PlusIcon } from "../icons/AutomotiveIcons";
 import { searchVehicles, createVehicle } from "../../api/vehicles";
 import { useWorkshopStore } from "../../stores/workshop.store";
+import { useNotification } from "../layout/NotificationProvider";
 import type { Vehicle } from "../../types/vehicle.types";
 
 interface VehicleQuickEntryProps {
@@ -18,8 +19,10 @@ export function VehicleQuickEntry({
   initialLicensePlate = "",
 }: VehicleQuickEntryProps) {
   const { currentWorkshop } = useWorkshopStore();
+  const { showCritical, showWarning, showInfo } = useNotification();
   const [licensePlate, setLicensePlate] = useState(initialLicensePlate.toUpperCase());
   const [isSearching, setIsSearching] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [searchResults, setSearchResults] = useState<Vehicle[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [createData, setCreateData] = useState({
@@ -55,14 +58,40 @@ export function VehicleQuickEntry({
   const handleCreate = async () => {
     if (!createData.license_plate.trim()) return;
 
+    setIsCreating(true);
     try {
       const vehicle = await createVehicle({
         ...createData,
         workshop_id: currentWorkshop?.id,
       });
       onSelect(vehicle);
-    } catch (error) {
+      showInfo("Vehicle created successfully", "Success");
+    } catch (error: any) {
       console.error("Failed to create vehicle:", error);
+      
+      // Handle 409 Conflict - vehicle already exists
+      if (error.response?.status === 409) {
+        const errorMessage = error.response?.data?.detail || "Vehicle with this license plate already exists";
+        showWarning(errorMessage, "Vehicle Already Exists");
+        
+        // Try to find and select the existing vehicle
+        try {
+          const existingVehicles = await searchVehicles(createData.license_plate);
+          if (existingVehicles.length > 0) {
+            // Select the first matching vehicle
+            onSelect(existingVehicles[0]);
+            showInfo("Selected existing vehicle", "Vehicle Found");
+          }
+        } catch (searchError) {
+          console.error("Failed to search for existing vehicle:", searchError);
+        }
+      } else {
+        // Handle other errors
+        const errorMessage = error.response?.data?.detail || error.message || "Failed to create vehicle";
+        showCritical(errorMessage, "Error");
+      }
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -274,11 +303,23 @@ export function VehicleQuickEntry({
           <div className="flex gap-2 pt-2">
             <button
               onClick={handleCreate}
-              disabled={!createData.license_plate.trim()}
+              disabled={!createData.license_plate.trim() || isCreating}
               className="flex-1 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <PlusIcon size={18} className="inline mr-2" />
-              Create Vehicle
+              {isCreating ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <PlusIcon size={18} className="inline mr-2" />
+                  Create Vehicle
+                </>
+              )}
             </button>
             <button
               onClick={() => {

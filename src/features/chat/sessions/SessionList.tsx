@@ -13,11 +13,18 @@ interface SessionListProps {
   filters?: SessionFilters;
 }
 
-export function SessionList({ onSelectSession, selectedSessionId }: SessionListProps) {
+export function SessionList({ 
+  onSelectSession, 
+  selectedSessionId,
+  searchQuery,
+  filters,
+}: SessionListProps) {
   return (
     <ChatThreadList
       onSelectThread={onSelectSession}
       selectedThreadId={selectedSessionId}
+      searchQuery={searchQuery}
+      filters={filters}
     />
   );
 }

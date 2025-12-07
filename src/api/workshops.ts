@@ -40,6 +40,11 @@ export interface WorkshopMember {
   is_active: boolean;
   invited_by?: string;
   created_at: string;
+  user?: {
+    id: string;
+    username: string;
+    email: string;
+  };
 }
 
 export interface WorkshopMembersResponse {
@@ -72,5 +77,39 @@ export async function updateWorkshopCustomization(
     payload,
   );
   return data;
+}
+
+export async function updateMemberRole(
+  workshopId: string,
+  userId: string,
+  role: "owner" | "admin" | "technician" | "member" | "viewer"
+): Promise<WorkshopMember> {
+  const { data } = await axiosClient.put<WorkshopMember>(
+    `/api/v1/workshops/${workshopId}/members/${userId}/role`,
+    { role }
+  );
+  return data;
+}
+
+export async function addMember(
+  workshopId: string,
+  payload: {
+    email?: string;
+    user_id?: string;
+    role: "owner" | "admin" | "technician" | "member" | "viewer";
+  }
+): Promise<WorkshopMember> {
+  const { data } = await axiosClient.post<WorkshopMember>(
+    `/api/v1/workshops/${workshopId}/members`,
+    payload
+  );
+  return data;
+}
+
+export async function removeMember(
+  workshopId: string,
+  userId: string
+): Promise<void> {
+  await axiosClient.delete(`/api/v1/workshops/${workshopId}/members/${userId}`);
 }
 

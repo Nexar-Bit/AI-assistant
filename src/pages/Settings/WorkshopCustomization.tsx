@@ -12,9 +12,13 @@ import { Button } from "../../components/common/Button";
 import { Input } from "../../components/common/Input";
 import { useNotification } from "../../components/layout/NotificationProvider";
 
-export function WorkshopCustomization() {
+interface WorkshopCustomizationProps {
+  onUpdate?: () => void;
+}
+
+export function WorkshopCustomization({ onUpdate }: WorkshopCustomizationProps) {
   const { currentWorkshop, setCurrentWorkshop } = useWorkshopStore();
-  const { showSuccess, showError } = useNotification();
+  const { showSuccess, showCritical } = useNotification();
   const [loading, setLoading] = useState(false);
 
   // Form state
@@ -56,10 +60,11 @@ export function WorkshopCustomization() {
       });
 
       setCurrentWorkshop(updated);
-      showSuccess("Workshop customization updated successfully");
+      showSuccess("Workshop customization updated successfully", "Success");
+      onUpdate?.();
     } catch (err: any) {
       console.error("Failed to update customization:", err);
-      showError(err.response?.data?.detail || "Failed to update customization");
+      showCritical(err.response?.data?.detail || "Failed to update customization", "Error");
     } finally {
       setLoading(false);
     }

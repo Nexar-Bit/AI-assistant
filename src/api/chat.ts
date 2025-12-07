@@ -53,3 +53,45 @@ export async function sendMessage(
   return data;
 }
 
+export async function updateChatThread(
+  threadId: string,
+  payload: {
+    is_resolved?: boolean;
+    is_archived?: boolean;
+    status?: "active" | "completed" | "archived";
+    title?: string;
+  }
+): Promise<ChatThread> {
+  const { data } = await axiosClient.put<ChatThread>(
+    `/api/v1/chat/threads/${threadId}`,
+    payload,
+  );
+  return data;
+}
+
+export interface DashboardStats {
+  total_consultations: number;
+  tokens_used_this_month: number;
+  resolved_count: number;
+  pending_count: number;
+  recent_activity: Array<{
+    id: string;
+    license_plate: string;
+    title: string;
+    status: string;
+    is_resolved: boolean;
+    created_at: string | null;
+    last_message_at: string | null;
+  }>;
+}
+
+export async function getDashboardStats(
+  workshopId?: string
+): Promise<DashboardStats> {
+  const { data } = await axiosClient.get<DashboardStats>(
+    "/api/v1/chat/stats",
+    { params: workshopId ? { workshop_id: workshopId } : {} }
+  );
+  return data;
+}
+

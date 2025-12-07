@@ -16,6 +16,7 @@ interface ChatContextValue {
   messages: ChatMessage[];
   isLoading: boolean;
   error: string | null;
+  clearError: () => void;
   
   // WebSocket
   isConnected: boolean;
@@ -25,6 +26,7 @@ interface ChatContextValue {
   sendMessage: (content: string, attachments?: any) => Promise<void>;
   createSession: (data: {
     license_plate: string;
+    vehicle_id?: string;
     vehicle_km?: number;
     error_codes?: string;
     vehicle_context?: string;
@@ -131,7 +133,14 @@ export function ChatProvider({ children }: ChatProviderProps) {
           });
         }, 3000);
       } else if (message.type === "error") {
-        setError(message.message || "An error occurred");
+        const errorMsg = message.message || "An error occurred";
+        setError(errorMsg);
+        // Log error details for debugging
+        console.error("WebSocket error:", {
+          message: errorMsg,
+          error_type: message.error_type,
+          full_message: message,
+        });
       }
     },
     onError: () => {
@@ -170,6 +179,9 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const sendMessage = useCallback(async (content: string, attachments?: any) => {
     if (!currentThread) return;
     
+    // Clear any previous errors when sending a new message
+    setError(null);
+    
     // Estimate tokens (rough: 4 chars per token)
     const estimated = Math.ceil(content.length / 4) + 800;
     setEstimatedTokens(estimated);
@@ -192,12 +204,14 @@ export function ChatProvider({ children }: ChatProviderProps) {
       }
     } catch (err: any) {
       console.error("Failed to send message:", err);
-      setError(err.response?.data?.detail || "Failed to send message");
+      const errorMessage = err.response?.data?.detail || err.message || "Failed to send message";
+      setError(errorMessage);
     }
   }, [currentThread, isConnected, wsSendMessage]);
 
   const createSession = useCallback(async (data: {
     license_plate: string;
+    vehicle_id?: string;
     vehicle_km?: number;
     error_codes?: string;
     vehicle_context?: string;
@@ -209,6 +223,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
     const thread = await createChatThread({
       workshop_id: currentWorkshop.id,
       license_plate: data.license_plate,
+      vehicle_id: data.vehicle_id,
       vehicle_km: data.vehicle_km,
       error_codes: data.error_codes,
       vehicle_context: data.vehicle_context,
@@ -218,12 +233,17 @@ export function ChatProvider({ children }: ChatProviderProps) {
     return thread;
   }, [currentWorkshop]);
 
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   const value: ChatContextValue = {
     currentThread,
     setCurrentThread,
     messages,
     isLoading,
     error,
+    clearError,
     isConnected,
     typingUsers,
     sendMessage,
