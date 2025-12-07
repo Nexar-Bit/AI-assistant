@@ -100,13 +100,17 @@ const navItems = [
 
 export function Sidebar() {
   const { currentWorkshop } = useWorkshopStore();
+  // Track if user manually toggled (to prevent auto-resize from overriding)
+  const [userToggled, setUserToggled] = useState(false);
   // On tablet (768px-1024px), start collapsed. On desktop (>1024px), start expanded
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hoverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-collapse on tablet on mount
+  // Auto-collapse on tablet on mount (only if user hasn't manually toggled)
   useEffect(() => {
+    if (userToggled) return; // Don't auto-adjust if user manually toggled
+    
     const handleResize = () => {
       const width = window.innerWidth;
       if (width >= 768 && width < 1024) {
@@ -119,13 +123,13 @@ export function Sidebar() {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [userToggled]);
 
   return (
     <aside
       className={`bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700/50 flex flex-col transition-all duration-300 ${
-        isCollapsed ? "w-16" : "w-20"
-      } flex-shrink-0 relative hidden md:flex lg:w-20 shadow-2xl`}
+        isCollapsed ? "w-16" : "w-64"
+      } flex-shrink-0 relative hidden md:flex shadow-2xl`}
     >
       {/* Workshop Logo/Header - Vibrant Design */}
       <div className="p-4 border-b border-slate-700/50 bg-gradient-to-r from-primary-600/20 to-accent-500/20">
@@ -162,7 +166,7 @@ export function Sidebar() {
             </div>
             {currentWorkshop && (
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-white truncate drop-shadow-lg">
+                <p className="text-sm font-bold text-white truncate drop-shadow-lg">
                   {currentWorkshop.name}
                 </p>
               </div>
@@ -230,7 +234,7 @@ export function Sidebar() {
                 to={item.to}
                 end={item.to === "/"}
                 className={({ isActive }) =>
-                  `relative flex items-center justify-center w-full h-14 rounded-xl transition-all duration-300 ${
+                  `relative flex items-center ${isCollapsed ? "justify-center" : "justify-start gap-3 px-3"} w-full h-14 rounded-xl transition-all duration-300 ${
                     isActive
                       ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg shadow-primary-500/50 scale-105`
                       : "text-slate-400 hover:text-white hover:bg-slate-700/50 hover:scale-105"
@@ -238,9 +242,15 @@ export function Sidebar() {
                 }
               >
                 {/* Icon with gradient background when active */}
-                <div className="flex items-center justify-center w-full">
+                <div className={`flex items-center ${isCollapsed ? "justify-center" : ""} ${isCollapsed ? "w-full" : "flex-shrink-0"}`}>
                   <IconComponent className="w-6 h-6" />
                 </div>
+                {/* Label when expanded */}
+                {!isCollapsed && (
+                  <span className="text-sm font-medium truncate">
+                    {item.label}
+                  </span>
+                )}
 
                 {/* Active indicator glow */}
                 {hoveredItem === item.to && (
@@ -289,9 +299,13 @@ export function Sidebar() {
       {/* Collapse Toggle - Modern Design */}
       <div className="p-4 border-t border-slate-700/50">
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={() => {
+            setUserToggled(true);
+            setIsCollapsed(!isCollapsed);
+          }}
           className="w-full flex items-center justify-center h-10 rounded-xl text-slate-400 hover:text-white hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 transition-all duration-300 hover:scale-105"
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          type="button"
         >
           <svg
             className={`w-5 h-5 transition-transform duration-300 ${
