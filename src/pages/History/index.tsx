@@ -101,9 +101,49 @@ export function HistoryPage() {
       );
       setSelected(new Set());
       loadThreads(); // Reload to reflect changes
+      showSuccess(`${ids.length} threads marked as resolved`, "Success");
     } catch (err: any) {
       console.error("Failed to mark threads as resolved:", err);
       showCritical(err.response?.data?.detail || "Failed to update threads", "Error");
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selected.size === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selected.size} selected threads? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const ids = Array.from(selected);
+      await Promise.all(
+        ids.map((id) => deleteChatThread(id))
+      );
+      setSelected(new Set());
+      loadThreads(); // Reload to reflect changes
+      showSuccess(`${ids.length} threads deleted successfully`, "Deletion Successful");
+    } catch (err: any) {
+      console.error("Failed to delete threads:", err);
+      showCritical(err.response?.data?.detail || "Failed to delete threads", "Error");
+    }
+  };
+
+  const handleDelete = async (threadId: string, licensePlate?: string) => {
+    const confirmMessage = licensePlate
+      ? `Are you sure you want to delete the chat history for ${licensePlate}? This action cannot be undone.`
+      : `Are you sure you want to delete this chat thread? This action cannot be undone.`;
+    
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      await deleteChatThread(threadId);
+      loadThreads(); // Reload to reflect changes
+      showSuccess("Chat thread deleted successfully", "Deletion Successful");
+    } catch (err: any) {
+      console.error("Failed to delete thread:", err);
+      showCritical(err.response?.data?.detail || "Failed to delete thread", "Error");
     }
   };
 
