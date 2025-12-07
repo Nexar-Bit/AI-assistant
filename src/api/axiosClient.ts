@@ -16,13 +16,13 @@ const getApiBaseUrl = (): string => {
       "⚠️ VITE_API_URL is not configured!\n" +
       "📋 Quick Fix:\n" +
       "1. Go to: https://vercel.com/dashboard\n" +
-      "2. Select project: ai-assist-eight\n" +
+      "2. Select your project\n" +
       "3. Settings → Environment Variables → Add New\n" +
       "4. Key: VITE_API_URL\n" +
-      "5. Value: https://ai-assist-backend-ex3q.onrender.com\n" +
+      "5. Value: https://ai-assistant-backend-69bs.onrender.com\n" +
       "6. Select all environments → Save → Redeploy\n" +
       "\n" +
-      "📖 Full guide: See VERCEL_FIX_NOW.md in project root"
+      "📖 Full guide: See VERCEL_DEPLOY.md in project root"
     );
   }
   
