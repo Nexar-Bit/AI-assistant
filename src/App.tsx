@@ -4,6 +4,7 @@ import { WorkshopProvider } from "./providers/WorkshopProvider";
 import { NotificationProvider } from "./components/layout/NotificationProvider";
 import { AppLayout } from "./components/layout/AppLayout";
 import { LoginPage } from "./pages/Login";
+import { SignupPage } from "./pages/Signup";
 import { DashboardPage } from "./pages/Dashboard";
 import { ConsultationPage } from "./pages/Consultation";
 import { HistoryPage } from "./pages/History";
@@ -36,6 +37,8 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/verify-email" element={<SignupPage />} />
             
             {/* Protected Routes with AppLayout */}
             <Route

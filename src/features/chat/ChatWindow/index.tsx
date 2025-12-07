@@ -7,6 +7,8 @@ import { ChatInput } from "./ChatInput";
 import { EmptyChatState } from "../../../components/chat/EmptyChatState";
 import { useChat } from "../context/useChat";
 import { useWorkshopStore } from "../../../stores/workshop.store";
+import { downloadChatThreadPDFFile } from "../../../api/reports";
+import { useNotification } from "../../../components/layout/NotificationProvider";
 import type { ChatThread } from "../../../types/chat.types";
 
 interface ChatWindowProps {
@@ -16,6 +18,7 @@ interface ChatWindowProps {
 
 export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
   const { currentWorkshop } = useWorkshopStore();
+  const { showSuccess, showCritical } = useNotification();
   const {
     messages,
     isLoading,
@@ -31,6 +34,17 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
     remainingTokens,
     tokenUsage,
   } = useChat();
+
+  const handleDownloadPDF = async () => {
+    if (!thread) return;
+    try {
+      await downloadChatThreadPDFFile(thread.id, thread.license_plate);
+      showSuccess("PDF downloaded successfully", "Download Complete");
+    } catch (error: any) {
+      console.error("Failed to download PDF:", error);
+      showCritical(error.message || "Failed to download PDF", "Error");
+    }
+  };
 
   if (!thread) {
     return <EmptyChatState onCreateSession={onCreateSession} />;
@@ -53,6 +67,7 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
         tokenUsage={tokenUsage}
         onStatusChange={updateThreadStatus}
         onDelete={deleteThread}
+        onDownloadPDF={handleDownloadPDF}
       />
 
       {/* Messages */}

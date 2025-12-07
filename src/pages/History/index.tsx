@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchChatThreads, updateChatThread, deleteChatThread } from "../../api/chat";
+import { downloadChatThreadPDFFile } from "../../api/reports";
 import { useWorkshopStore } from "../../stores/workshop.store";
 import { useNotification } from "../../components/layout/NotificationProvider";
 import { formatDateTime } from "../../utils/formatters";
@@ -12,6 +13,7 @@ export function HistoryPage() {
   const [threads, setThreads] = useState<ChatThread[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     license_plate: "",
     status: "all" as "all" | "active" | "completed" | "archived",
@@ -144,6 +146,19 @@ export function HistoryPage() {
     } catch (err: any) {
       console.error("Failed to delete thread:", err);
       showCritical(err.response?.data?.detail || "Failed to delete thread", "Error");
+    }
+  };
+
+  const handleDownloadPDF = async (threadId: string, licensePlate: string) => {
+    setDownloading(threadId);
+    try {
+      await downloadChatThreadPDFFile(threadId, licensePlate);
+      showSuccess("PDF downloaded successfully", "Download Complete");
+    } catch (error: any) {
+      console.error("Failed to download PDF:", error);
+      showCritical(error.message || "Failed to download PDF", "Error");
+    } finally {
+      setDownloading(null);
     }
   };
 
@@ -384,6 +399,29 @@ export function HistoryPage() {
                       >
                         View
                       </Link>
+                      <button
+                        onClick={() => handleDownloadPDF(thread.id, thread.license_plate)}
+                        disabled={downloading === thread.id}
+                        className="text-xs text-primary-400 hover:text-primary-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                        title="Download PDF report"
+                      >
+                        {downloading === thread.id ? (
+                          <>
+                            <svg className="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Downloading...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            PDF
+                          </>
+                        )}
+                      </button>
                       <button
                         onClick={() => handleDelete(thread.id, thread.license_plate)}
                         className="text-xs text-red-400 hover:text-red-300 transition-colors"
