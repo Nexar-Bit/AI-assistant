@@ -262,30 +262,46 @@ export function TopBar() {
                   Help & Support
                 </h3>
                 <div className="space-y-1">
-                  <a
-                    href="#"
-                    className="block px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-white transition-all duration-300"
+                  <button
+                    onClick={() => {
+                      setShowHelp(false);
+                      window.open("https://docs.example.com", "_blank");
+                    }}
+                    className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-white transition-all duration-300"
+                    type="button"
                   >
                     📖 Documentation
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-white transition-all duration-300"
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowHelp(false);
+                      window.open("https://youtube.com/playlist?list=example", "_blank");
+                    }}
+                    className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-white transition-all duration-300"
+                    type="button"
                   >
                     🎥 Video Tutorials
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-white transition-all duration-300"
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowHelp(false);
+                      window.open("mailto:support@example.com?subject=Support Request", "_blank");
+                    }}
+                    className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-white transition-all duration-300"
+                    type="button"
                   >
                     💬 Contact Support
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-white transition-all duration-300"
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowHelp(false);
+                      window.open("https://github.com/your-repo/issues/new", "_blank");
+                    }}
+                    className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-white transition-all duration-300"
+                    type="button"
                   >
                     🐛 Report Issue
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
