@@ -64,13 +64,52 @@ export async function downloadPDF(consultationId: string, filename?: string): Pr
  * @returns Blob data for the PDF file
  */
 export async function downloadChatThreadPDF(threadId: string): Promise<Blob> {
-  const response = await axiosClient.get(
-    `/api/v1/reports/chat-threads/${threadId}/download`,
-    {
-      responseType: "blob",
+  try {
+    const response = await axiosClient.get(
+      `/api/v1/reports/chat-threads/${threadId}/download`,
+      {
+        responseType: "blob",
+        validateStatus: (status) => status < 500, // Don't throw on 4xx/5xx, handle manually
+      }
+    );
+    
+    // Check if response is an error (JSON error message in blob)
+    if (response.status >= 400) {
+      // Try to parse error message from blob
+      const text = await response.data.text();
+      let errorMessage = "Failed to download PDF";
+      try {
+        const errorJson = JSON.parse(text);
+        errorMessage = errorJson.detail || errorJson.message || errorMessage;
+      } catch {
+        // If not JSON, use status text
+        errorMessage = `Server error (${response.status}): ${response.statusText || "Unknown error"}`;
+      }
+      throw new Error(errorMessage);
     }
-  );
-  return response.data;
+    
+    // Check if blob is actually a PDF
+    if (response.data.type && !response.data.type.includes("pdf")) {
+      // Might be an error message
+      const text = await response.data.text();
+      try {
+        const errorJson = JSON.parse(text);
+        throw new Error(errorJson.detail || errorJson.message || "Failed to download PDF");
+      } catch {
+        throw new Error("Server returned non-PDF content");
+      }
+    }
+    
+    return response.data;
+  } catch (error: any) {
+    // If it's already an Error with message, re-throw it
+    if (error instanceof Error) {
+      throw error;
+    }
+    // Otherwise, extract from axios error
+    const errorMessage = error.response?.data?.detail || error.message || "Failed to download PDF";
+    throw new Error(errorMessage);
+  }
 }
 
 /**

@@ -42,7 +42,9 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
       showSuccess("PDF downloaded successfully", "Download Complete");
     } catch (error: any) {
       console.error("Failed to download PDF:", error);
-      showCritical(error.message || "Failed to download PDF", "Error");
+      // Extract detailed error message
+      const errorMessage = error.message || error.response?.data?.detail || "Failed to download PDF. Please check server logs for details.";
+      showCritical(errorMessage, "Download Error");
     }
   };
 
