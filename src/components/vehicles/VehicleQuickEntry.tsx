@@ -80,7 +80,7 @@ export function VehicleQuickEntry({
           if (existingVehicles.length > 0) {
             // Select the first matching vehicle
             onSelect(existingVehicles[0]);
-            showInfo("Selected existing vehicle", "Vehicle Found");
+            showInfo("Vehículo existente encontrado y mostrado en la lista", "Vehículo encontrado");
           }
         } catch (searchError) {
           console.error("Failed to search for existing vehicle:", searchError);

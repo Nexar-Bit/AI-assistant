@@ -3,7 +3,6 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useWorkshopStore } from '../../stores/workshop.store';
 import { useNotification } from '../../components/layout/NotificationProvider';
@@ -30,7 +29,6 @@ const PROVIDER_TYPES = [
 ];
 
 export function AIProvidersSettings() {
-  const { t } = useTranslation();
   const { canAccess, isAdmin } = usePermissions();
   const { currentWorkshop } = useWorkshopStore();
   const { showSuccess, showCritical } = useNotification();
@@ -179,7 +177,7 @@ export function AIProvidersSettings() {
   if (loading) {
     return (
       <div className="card">
-        <p className="text-industrial-400">{t('common.loading')}</p>
+        <p className="text-industrial-400">Cargando...</p>
       </div>
     );
   }

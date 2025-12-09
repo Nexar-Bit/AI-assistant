@@ -1,7 +1,6 @@
 /** Empty chat state component - shown when no active consultations */
 
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { Button } from "../common/Button";
 import { CarIcon } from "../icons/AutomotiveIcons";
 
@@ -10,7 +9,6 @@ interface EmptyChatStateProps {
 }
 
 export function EmptyChatState({ onCreateSession }: EmptyChatStateProps) {
-  const { t } = useTranslation();
   return (
     <div className="flex-1 flex items-center justify-center p-8">
       <div className="card-industrial max-w-md w-full text-center space-y-6 py-12 px-8">
@@ -24,24 +22,24 @@ export function EmptyChatState({ onCreateSession }: EmptyChatStateProps) {
         {/* Title */}
         <div>
           <h3 className="text-xl font-semibold text-industrial-200 mb-2">
-            {t("chat.emptyState.noActiveConsultations")}
+            No hay consultas activas
           </h3>
         </div>
 
         {/* Instructions */}
         <div className="space-y-3 text-left">
           <p className="text-sm text-industrial-400">
-            {t("chat.emptyState.startNewDiagnostic")}
+            Inicia una nueva sesión de diagnóstico:
           </p>
           <ol className="space-y-2 text-sm text-industrial-300 list-decimal list-inside">
             <li className="pl-2">
-              {t("chat.emptyState.selectVehicle")}
+              Seleccionando un vehículo de tu taller
             </li>
             <li className="pl-2">
-              {t("chat.emptyState.enterErrorCodes")}
+              Ingresando códigos de error o síntomas
             </li>
             <li className="pl-2">
-              {t("chat.emptyState.askAI")}
+              Preguntando a nuestro asistente de IA para obtener orientación
             </li>
           </ol>
         </div>
@@ -54,7 +52,7 @@ export function EmptyChatState({ onCreateSession }: EmptyChatStateProps) {
               className="w-full flex items-center justify-center gap-2"
             >
               <CarIcon size={20} />
-              <span>{t("chat.emptyState.startNewDiagnosis")}</span>
+              <span>Iniciar nuevo diagnóstico</span>
             </Button>
           </div>
         )}

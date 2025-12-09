@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { loginApi } from "../../api/auth";
 import { useAuthStore } from "../../stores/auth.store";
 import { Button } from "../../components/common/Button";
 import { Input } from "../../components/common/Input";
 
 export function LoginPage() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const setTokens = useAuthStore((s) => s.setTokens);
   const [username, setUsername] = useState("");
@@ -25,7 +23,7 @@ export function LoginPage() {
       navigate("/");
     } catch (err) {
       console.error(err);
-      setError(t("auth.login.invalidCredentials"));
+      setError("Credenciales inválidas");
     } finally {
       setLoading(false);
     }
@@ -61,24 +59,24 @@ export function LoginPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gradient-primary">
-                {t("auth.login.title")}
+                Iniciar sesión
               </h1>
               <p className="text-xs text-industrial-400">Plataforma Profesional</p>
             </div>
           </div>
           <p className="mb-6 text-sm text-industrial-300">
-            {t("auth.login.subtitle")}
+            Inicia sesión para acceder a la consola de diagnósticos y comenzar a analizar problemas de vehículos.
           </p>
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input
-              label={t("auth.login.username")}
+              label="Usuario"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
               required
             />
             <Input
-              label={t("auth.login.password")}
+              label="Contraseña"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -101,16 +99,16 @@ export function LoginPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  {t("auth.login.signingIn")}
+                  Iniciando sesión...
                 </>
               ) : (
-                t("auth.login.signIn")
+                <>Iniciar sesión</>
               )}
             </Button>
             <div className="text-center text-sm text-industrial-400 mt-4">
-              {t("auth.login.noAccount")}{" "}
+              ¿No tienes una cuenta?{" "}
               <Link to="/signup" className="text-primary-400 hover:text-primary-300 font-medium">
-                {t("auth.login.signUp")}
+                Regístrate
               </Link>
             </div>
           </form>

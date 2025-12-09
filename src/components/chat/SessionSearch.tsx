@@ -36,7 +36,7 @@ export function SessionSearch({
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search sessions by license plate, title..."
+          placeholder="Buscar sesiones por placa, título..."
           className="input-industrial w-full pl-10 pr-10"
         />
         {searchQuery && (
@@ -55,7 +55,7 @@ export function SessionSearch({
         className="flex items-center gap-2 text-xs text-industrial-400 hover:text-industrial-300 transition-colors"
       >
         <FilterIcon size={16} />
-        <span>Filters</span>
+        <span>Filtros</span>
         {showFilters && <span className="text-primary-400">●</span>}
       </button>
 
@@ -63,7 +63,7 @@ export function SessionSearch({
       {showFilters && onFilterChange && (
         <div className="glass rounded-lg p-3 space-y-3 animate-slide-up">
           <div>
-            <label className="text-xs text-industrial-400 mb-1 block">Status</label>
+            <label className="text-xs text-industrial-400 mb-1 block">Estado</label>
             <select
               value={filters.status || "all"}
               onChange={(e) =>
@@ -74,15 +74,15 @@ export function SessionSearch({
               }
               className="input-industrial text-sm"
             >
-              <option value="all">All</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-              <option value="archived">Archived</option>
+              <option value="all">Todos</option>
+              <option value="active">Activo</option>
+              <option value="completed">Completado</option>
+              <option value="archived">Archivado</option>
             </select>
           </div>
 
           <div>
-            <label className="text-xs text-industrial-400 mb-1 block">Resolved</label>
+            <label className="text-xs text-industrial-400 mb-1 block">Resuelto</label>
             <select
               value={
                 filters.is_resolved === true
@@ -104,14 +104,14 @@ export function SessionSearch({
               }
               className="input-industrial text-sm"
             >
-              <option value="all">All</option>
-              <option value="resolved">Resolved</option>
-              <option value="unresolved">Unresolved</option>
+              <option value="all">Todos</option>
+              <option value="resolved">Resuelto</option>
+              <option value="unresolved">Sin resolver</option>
             </select>
           </div>
 
           <div>
-            <label className="text-xs text-industrial-400 mb-1 block">License Plate</label>
+            <label className="text-xs text-industrial-400 mb-1 block">Placa</label>
             <input
               type="text"
               value={filters.license_plate || ""}
@@ -121,7 +121,7 @@ export function SessionSearch({
                   license_plate: e.target.value || undefined,
                 })
               }
-              placeholder="Filter by plate..."
+              placeholder="Filtrar por placa..."
               className="input-industrial text-sm"
             />
           </div>

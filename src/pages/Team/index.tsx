@@ -55,8 +55,8 @@ export function TeamPage() {
       setMembers(response.members);
     } catch (err: any) {
       console.error("Failed to load members:", err);
-      setError(err.response?.data?.detail || "Failed to load team members");
-      showCritical(err.response?.data?.detail || "Failed to load team members", "Error");
+      setError(err.response?.data?.detail || "No se pudieron cargar los miembros del equipo");
+      showCritical(err.response?.data?.detail || "No se pudieron cargar los miembros del equipo", "Error");
     } finally {
       setLoading(false);
     }
@@ -74,10 +74,10 @@ export function TeamPage() {
       setMembers(members.map((m) => (m.id === updated.id ? { ...m, role: updated.role } : m)));
       setEditingMember(null);
       setSelectedRole("");
-      showSuccess("Member role updated successfully", "Success");
+      showSuccess("Rol de miembro actualizado exitosamente", "Éxito");
     } catch (err: any) {
       console.error("Failed to update role:", err);
-      showCritical(err.response?.data?.detail || "Failed to update member role", "Error");
+      showCritical(err.response?.data?.detail || "No se pudo actualizar el rol del miembro", "Error");
     }
   };
 
@@ -92,27 +92,27 @@ export function TeamPage() {
       setMembers([...members, newMember]);
       setShowAddModal(false);
       setAddMemberData({ email: "", role: "member" });
-      showSuccess("Member added successfully", "Success");
+      showSuccess("Miembro agregado exitosamente", "Éxito");
     } catch (err: any) {
       console.error("Failed to add member:", err);
-      showCritical(err.response?.data?.detail || "Failed to add member", "Error");
+      showCritical(err.response?.data?.detail || "No se pudo agregar el miembro", "Error");
     }
   };
 
   const handleRemoveMember = async (member: WorkshopMember) => {
     if (!currentWorkshop) return;
 
-    if (!confirm(`Are you sure you want to remove ${member.user?.username || member.user_id} from the team?`)) {
+    if (!confirm(`¿Estás seguro de que deseas eliminar a ${member.user?.username || member.user_id} del equipo?`)) {
       return;
     }
 
     try {
       await removeMember(currentWorkshop.id, member.user_id);
       setMembers(members.filter((m) => m.id !== member.id));
-      showSuccess("Member removed successfully", "Success");
+      showSuccess("Miembro eliminado exitosamente", "Éxito");
     } catch (err: any) {
       console.error("Failed to remove member:", err);
-      showCritical(err.response?.data?.detail || "Failed to remove member", "Error");
+      showCritical(err.response?.data?.detail || "No se pudo eliminar el miembro", "Error");
     }
   };
 
@@ -154,7 +154,7 @@ export function TeamPage() {
     return (
       <div className="space-y-6 animate-fade-in p-6">
         <div className="card text-center py-12">
-          <p className="text-industrial-400">Please select a workshop to view team members.</p>
+          <p className="text-industrial-400">Por favor selecciona un taller para ver los miembros del equipo.</p>
         </div>
       </div>
     );
@@ -164,9 +164,9 @@ export function TeamPage() {
     <div className="space-y-6 animate-fade-in p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-industrial-100 mb-2">Team</h1>
+          <h1 className="text-3xl font-bold text-industrial-100 mb-2">Equipo</h1>
           <p className="text-industrial-400">
-            Manage workshop team members and roles
+            Gestiona los miembros del equipo del taller y sus roles
           </p>
         </div>
         <PermissionGate permission="addTeamMember">
@@ -178,7 +178,7 @@ export function TeamPage() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Add Member
+              Agregar miembro
             </button>
           )}
         </PermissionGate>
@@ -197,7 +197,7 @@ export function TeamPage() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p className="text-industrial-400">Loading team members...</p>
+            <p className="text-industrial-400">Cargando miembros del equipo...</p>
           </div>
         </div>
       ) : members.length === 0 ? (
@@ -205,7 +205,7 @@ export function TeamPage() {
           <svg className="w-12 h-12 text-industrial-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          <p className="text-industrial-400 font-medium">No team members found.</p>
+          <p className="text-industrial-400 font-medium">No se encontraron miembros del equipo.</p>
         </div>
       ) : (
         <div className="card overflow-hidden p-0">
@@ -213,22 +213,22 @@ export function TeamPage() {
             <thead className="bg-industrial-800/50 border-b border-industrial-700/50">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  User
+                  Usuario
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Email
+                  Correo
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Role
+                  Rol
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Status
+                  Estado
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Joined
+                  Se unió
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Actions
+                  Acciones
                 </th>
               </tr>
             </thead>
@@ -242,10 +242,10 @@ export function TeamPage() {
                       </div>
                       <div>
                         <div className="text-sm font-semibold text-industrial-100">
-                          {member.user?.username || "Unknown User"}
+                          {member.user?.username || "Usuario desconocido"}
                         </div>
                         {member.user_id === currentUserId && (
-                          <span className="text-xs text-primary-400">(You)</span>
+                          <span className="text-xs text-primary-400">(Tú)</span>
                         )}
                       </div>
                     </div>
@@ -280,7 +280,12 @@ export function TeamPage() {
                             : "bg-gray-400"
                         }`}
                       ></span>
-                      {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
+                      {member.role === "owner" ? "Propietario" : 
+                       member.role === "admin" ? "Administrador" :
+                       member.role === "technician" ? "Técnico" :
+                       member.role === "member" ? "Miembro" :
+                       member.role === "viewer" ? "Visualizador" :
+                       member.role.charAt(0).toUpperCase() + member.role.slice(1)}
                     </span>
                   </td>
                   <td className="px-4 py-3">
@@ -294,7 +299,7 @@ export function TeamPage() {
                       <span
                         className={`h-1.5 w-1.5 rounded-full ${member.is_active ? "bg-emerald-400" : "bg-red-400"}`}
                       ></span>
-                      {member.is_active ? "Active" : "Inactive"}
+                      {member.is_active ? "Activo" : "Inactivo"}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-industrial-300">
@@ -308,7 +313,7 @@ export function TeamPage() {
                             onClick={() => startEdit(member)}
                             className="text-xs text-primary-400 hover:text-primary-300 transition-colors"
                           >
-                            Edit Role
+                            Editar rol
                           </button>
                         )}
                       </PermissionGate>
@@ -318,7 +323,7 @@ export function TeamPage() {
                             onClick={() => handleRemoveMember(member)}
                             className="text-xs text-red-400 hover:text-red-300 transition-colors"
                           >
-                            Remove
+                            Eliminar
                           </button>
                         )}
                       </PermissionGate>
@@ -337,7 +342,7 @@ export function TeamPage() {
           <div className="card max-w-md w-full">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-industrial-100">
-                Add Team Member
+                Agregar miembro al equipo
               </h2>
               <button
                 onClick={() => {
@@ -355,34 +360,34 @@ export function TeamPage() {
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-medium text-industrial-300 mb-1 block">
-                  User Email *
+                  Correo del usuario *
                 </label>
                 <input
                   type="email"
                   value={addMemberData.email}
                   onChange={(e) => setAddMemberData({ ...addMemberData, email: e.target.value })}
                   className="input-industrial"
-                  placeholder="user@example.com"
+                  placeholder="usuario@ejemplo.com"
                   required
                 />
                 <p className="text-xs text-industrial-500 mt-1">
-                  User must already have an account
+                  El usuario debe tener una cuenta existente
                 </p>
               </div>
 
               <div>
                 <label className="text-xs font-medium text-industrial-300 mb-1 block">
-                  Role
+                  Rol
                 </label>
                 <select
                   value={addMemberData.role}
                   onChange={(e) => setAddMemberData({ ...addMemberData, role: e.target.value as any })}
                   className="input-industrial"
                 >
-                  <option value="viewer">Viewer</option>
-                  <option value="member">Member</option>
-                  <option value="technician">Technician</option>
-                  <option value="admin">Admin</option>
+                  <option value="viewer">Visualizador</option>
+                  <option value="member">Miembro</option>
+                  <option value="technician">Técnico</option>
+                  <option value="admin">Administrador</option>
                 </select>
               </div>
 
@@ -392,7 +397,7 @@ export function TeamPage() {
                   disabled={!addMemberData.email.trim()}
                   className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Add Member
+                  Agregar miembro
                 </button>
                 <button
                   onClick={() => {
@@ -401,7 +406,7 @@ export function TeamPage() {
                   }}
                   className="btn-secondary"
                 >
-                  Cancel
+                  Cancelar
                 </button>
               </div>
             </div>
@@ -415,7 +420,7 @@ export function TeamPage() {
           <div className="card max-w-md w-full">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-industrial-100">
-                Edit Member Role
+                Editar rol del miembro
               </h2>
               <button
                 onClick={cancelEdit}
@@ -430,21 +435,21 @@ export function TeamPage() {
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-industrial-400 mb-2">
-                  Updating role for: <span className="font-semibold text-industrial-200">{editingMember.user?.username || editingMember.user_id}</span>
+                  Actualizando rol para: <span className="font-semibold text-industrial-200">{editingMember.user?.username || editingMember.user_id}</span>
                 </p>
                 <label className="text-xs font-medium text-industrial-300 mb-1 block">
-                  Role
+                  Rol
                 </label>
                 <select
                   value={selectedRole}
                   onChange={(e) => setSelectedRole(e.target.value)}
                   className="input-industrial"
                 >
-                  <option value="viewer">Viewer</option>
-                  <option value="member">Member</option>
-                  <option value="technician">Technician</option>
-                  <option value="admin">Admin</option>
-                  {editingMember.role === "owner" && <option value="owner">Owner</option>}
+                  <option value="viewer">Visualizador</option>
+                  <option value="member">Miembro</option>
+                  <option value="technician">Técnico</option>
+                  <option value="admin">Administrador</option>
+                  {editingMember.role === "owner" && <option value="owner">Propietario</option>}
                 </select>
               </div>
 
@@ -454,13 +459,13 @@ export function TeamPage() {
                   disabled={!selectedRole || selectedRole === editingMember.role}
                   className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Update Role
+                  Actualizar rol
                 </button>
                 <button
                   onClick={cancelEdit}
                   className="btn-secondary"
                 >
-                  Cancel
+                  Cancelar
                 </button>
               </div>
             </div>

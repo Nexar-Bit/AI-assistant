@@ -1,7 +1,6 @@
 /** Context panel with vehicle details, session highlights, error codes, suggestions */
 
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { CarIcon, SpeedometerIcon, AlertIcon, WrenchIcon } from "../icons/AutomotiveIcons";
 import { DiagnosticCode } from "../common/DiagnosticCode";
 import { VehicleDetailsPanel } from "../vehicle/VehicleDetailsPanel";
@@ -23,6 +22,20 @@ interface ContextPanelProps {
   onSuggestedQuestionClick?: (question: string) => void;
 }
 
+// Error code explanations in Spanish
+const ERROR_CODE_EXPLANATIONS: Record<string, string> = {
+  "P0301": "Falla detectada en cilindro 1",
+  "P0302": "Falla detectada en cilindro 2",
+  "P0303": "Falla detectada en cilindro 3",
+  "P0304": "Falla detectada en cilindro 4",
+  "P0420": "Eficiencia del sistema catalítico por debajo del umbral",
+  "P0171": "Sistema demasiado pobre (Banco 1)",
+  "P0172": "Sistema demasiado rico (Banco 1)",
+  "P0401": "Flujo de recirculación de gases de escape insuficiente",
+  "P0442": "Fuga detectada en el sistema de control de emisiones evaporativas (pequeña)",
+  "P0455": "Fuga detectada en el sistema de control de emisiones evaporativas (grande)"
+};
+
 export function ContextPanel({
   vehicleId,
   vehicleData,
@@ -31,12 +44,8 @@ export function ContextPanel({
   suggestedQuestions = [],
   onSuggestedQuestionClick,
 }: ContextPanelProps) {
-  const { t } = useTranslation();
-  
   const getErrorCodeExplanation = (code: string): string => {
-    const key = `chat.errorCodes.${code}`;
-    const translation = t(key);
-    return translation !== key ? translation : "";
+    return ERROR_CODE_EXPLANATIONS[code] || "";
   };
   
   return (
@@ -47,19 +56,19 @@ export function ContextPanel({
           <div className="flex items-center gap-2 mb-3">
             <CarIcon size={18} className="text-primary-400" />
             <h3 className="font-semibold text-industrial-200 text-sm">
-              {t("chat.contextPanel.vehicleSummary")}
+              Resumen del vehículo
             </h3>
           </div>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-industrial-400">{t("chat.contextPanel.license")}</span>
+              <span className="text-industrial-400">Placa:</span>
               <span className="text-industrial-200 font-semibold">
                 {vehicleData.license_plate}
               </span>
             </div>
             {vehicleData.make && vehicleData.model && (
               <div className="flex justify-between">
-                <span className="text-industrial-400">{t("chat.contextPanel.makeModel")}</span>
+                <span className="text-industrial-400">Marca/Modelo:</span>
                 <span className="text-industrial-200">
                   {vehicleData.make} {vehicleData.model}
                 </span>
@@ -69,7 +78,7 @@ export function ContextPanel({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <SpeedometerIcon size={14} className="text-industrial-500" />
-                  <span className="text-industrial-400">{t("chat.contextPanel.currentKm")}</span>
+                  <span className="text-industrial-400">Kilometraje actual:</span>
                 </div>
                 <span className="text-industrial-200 font-semibold">
                   {vehicleData.current_km.toLocaleString()} km
@@ -86,7 +95,7 @@ export function ContextPanel({
           <div className="flex items-center gap-2 mb-3">
             <AlertIcon size={18} className="text-warning-400" />
             <h3 className="font-semibold text-industrial-200 text-sm">
-              {t("chat.contextPanel.errorCodes")}
+              Códigos de error
             </h3>
           </div>
           <div className="space-y-2">
@@ -113,7 +122,7 @@ export function ContextPanel({
           <div className="flex items-center gap-2 mb-3">
             <WrenchIcon size={18} className="text-primary-400" />
             <h3 className="font-semibold text-industrial-200 text-sm">
-              {t("chat.contextPanel.sessionHighlights")}
+              Resaltados de la sesión
             </h3>
           </div>
           <ul className="space-y-2 text-sm">
@@ -131,7 +140,7 @@ export function ContextPanel({
       {suggestedQuestions.length > 0 && (
         <div className="card-industrial">
           <h3 className="font-semibold text-industrial-200 text-sm mb-3">
-            {t("chat.contextPanel.suggestedQuestions")}
+            Preguntas sugeridas
           </h3>
           <div className="space-y-2">
             {suggestedQuestions.map((question, idx) => (

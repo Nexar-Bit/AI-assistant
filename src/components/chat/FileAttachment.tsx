@@ -29,7 +29,7 @@ export function FileAttachment({ onFileUploaded, onCancel }: FileAttachmentProps
 
     // Validate file size (10MB max)
     if (file.size > 10 * 1024 * 1024) {
-      setError("File size must be less than 10MB");
+      setError("El tamaño del archivo debe ser menor a 10MB");
       return;
     }
 
@@ -54,7 +54,7 @@ export function FileAttachment({ onFileUploaded, onCancel }: FileAttachmentProps
       setPreview(null);
     } catch (err: any) {
       console.error("File upload failed:", err);
-      setError(err.response?.data?.detail || "Failed to upload file");
+      setError(err.response?.data?.detail || "No se pudo subir el archivo");
     } finally {
       setUploading(false);
     }
@@ -63,7 +63,7 @@ export function FileAttachment({ onFileUploaded, onCancel }: FileAttachmentProps
   return (
     <div className="glass rounded-lg p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-industrial-200">Attach File</h3>
+        <h3 className="text-sm font-semibold text-industrial-200">Adjuntar archivo</h3>
         {onCancel && (
           <button
             onClick={onCancel}
@@ -101,11 +101,11 @@ export function FileAttachment({ onFileUploaded, onCancel }: FileAttachmentProps
             className="hidden"
           />
           <div className="btn-industrial w-full text-center cursor-pointer disabled:opacity-50">
-            {uploading ? "Uploading..." : "Choose File"}
+            {uploading ? "Subiendo..." : "Elegir archivo"}
           </div>
         </label>
         <p className="text-xs text-industrial-500 mt-2">
-          Images, PDFs, or text files (max 10MB)
+          Imágenes, PDFs o archivos de texto (máx. 10MB)
         </p>
       </div>
     </div>

@@ -1,7 +1,6 @@
 /** Alert component with success, warning, and error variants */
 
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { CheckCircleIcon, AlertIcon, InfoIcon } from "../icons/AutomotiveIcons";
 
 interface AlertProps {
@@ -75,7 +74,7 @@ export function Alert({
           <button
             onClick={onClose}
             className={`text-${config.textColor} hover:opacity-70 transition-opacity`}
-            aria-label={t("settings.closeAlert")}
+            aria-label="Cerrar alerta"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

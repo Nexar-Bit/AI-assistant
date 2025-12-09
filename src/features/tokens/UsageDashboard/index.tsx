@@ -51,7 +51,7 @@ export function UsageDashboard() {
         <TokenMeter
           used={user.daily_used}
           limit={user.daily_limit}
-          label="Your Daily Limit"
+          label="Tu límite diario"
         />
       )}
 
@@ -60,14 +60,14 @@ export function UsageDashboard() {
         <TokenMeter
           used={workshop.monthly_used}
           limit={workshop.monthly_limit}
-          label="Workshop Monthly"
+          label="Taller mensual"
         />
       )}
 
       {/* Reset Info */}
       {workshop?.reset_date && (
         <div className="text-xs text-industrial-500 text-center">
-          Resets: {new Date(workshop.reset_date).toLocaleDateString()}
+          Reinicia: {new Date(workshop.reset_date).toLocaleDateString()}
         </div>
       )}
 

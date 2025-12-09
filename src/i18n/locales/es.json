@@ -39,7 +39,10 @@
     "myWorkshop": "Mi Taller",
     "workshopDescription": "Descripción del taller...",
     "queryResponseText": "Texto de consulta / respuesta",
-    "justNow": "Justo ahora"
+    "justNow": "Justo ahora",
+    "allTime": "Todo el tiempo",
+    "thisMonth": "Este mes",
+    "noDataYet": "Sin datos aún"
   },
   "auth": {
     "login": {
@@ -88,9 +91,19 @@
       "alreadyVerified": "Este correo electrónico ya ha sido verificado"
     }
   },
+  "navigation": {
+    "dashboard": "Panel",
+    "chat": "Chat",
+    "history": "Historial",
+    "vehicles": "Vehículos",
+    "team": "Equipo",
+    "settings": "Configuración"
+  },
   "dashboard": {
     "title": "Panel de control",
     "welcome": "Bienvenido",
+    "overview": "Resumen de tu actividad de diagnósticos y métricas del sistema",
+    "loadingData": "Cargando datos...",
     "stats": {
       "totalConsultations": "Consultas totales",
       "tokensUsed": "Tokens usados este mes",
@@ -98,6 +111,12 @@
       "pending": "Pendientes",
       "recentActivity": "Actividad reciente"
     },
+    "issuesResolved": "Problemas resueltos",
+    "awaitingResolution": "Esperando resolución",
+    "resolvedStatus": "Resuelto",
+    "noRecentConsultations": "No hay consultas recientes",
+    "startNewChat": "Iniciar nuevo chat",
+    "viewHistory": "Ver historial",
     "quickActions": {
       "title": "Acciones rápidas",
       "newSession": "Nueva sesión",
@@ -110,10 +129,25 @@
   },
   "chat": {
     "title": "Chat de diagnósticos",
+    "chatSessions": "Sesiones de chat",
+    "new": "Nuevo",
     "newSession": "Nueva sesión",
     "sessions": "Sesiones",
     "noSessions": "No hay sesiones activas",
     "createFirstSession": "Crea tu primera sesión para comenzar",
+    "search": {
+      "placeholder": "Buscar sesiones por placa, título...",
+      "filters": "Filtros",
+      "status": "Estado",
+      "all": "Todos",
+      "active": "Activo",
+      "completed": "Completado",
+      "archived": "Archivado",
+      "resolved": "Resuelto",
+      "unresolved": "Sin resolver",
+      "licensePlate": "Placa",
+      "filterByPlate": "Filtrar por placa..."
+    },
     "emptyState": {
       "title": "No hay sesión activa",
       "description": "Selecciona una sesión existente o crea una nueva para comenzar el diagnóstico.",
@@ -151,7 +185,9 @@
       "status": {
         "active": "Activo",
         "resolved": "Resuelto",
-        "archived": "Archivado"
+        "archived": "Archivado",
+        "inProgress": "En progreso",
+        "completeResolved": "Completo / Resuelto"
       },
       "vehicleInfo": "Información del vehículo",
       "licensePlate": "Placa",
@@ -172,7 +208,8 @@
       "internalError": "Error interno del servidor",
       "failedToDownloadPDF": "No se pudo descargar el PDF. Por favor revisa los logs del servidor para más detalles.",
       "downloadComplete": "Descarga completa",
-      "pdfDownloadedSuccessfully": "PDF descargado exitosamente"
+      "pdfDownloadedSuccessfully": "PDF descargado exitosamente",
+      "fileSizeExceeded": "El tamaño del archivo debe ser menor a 10MB"
     }
   },
   "vehicles": {
@@ -192,6 +229,7 @@
       "model": "Modelo",
       "year": "Año",
       "vin": "VIN",
+      "vinNumber": "Número VIN",
       "currentKm": "Kilometraje actual",
       "lastServiceKm": "Kilometraje último servicio",
       "lastServiceDate": "Fecha último servicio",
@@ -201,7 +239,9 @@
     },
     "actions": {
       "create": "Crear vehículo",
+      "createVehicle": "Crear vehículo",
       "update": "Actualizar vehículo",
+      "updateVehicle": "Actualizar vehículo",
       "delete": "Eliminar vehículo",
       "cancel": "Cancelar",
       "saving": "Guardando...",
@@ -235,12 +275,27 @@
   "tokens": {
     "title": "Gestión de tokens",
     "usage": "Uso",
+    "tokenUsage": "Uso de tokens",
     "remaining": "Restantes",
     "limit": "Límite",
     "daily": "Diario",
     "monthly": "Mensual",
     "workshop": "Taller",
+    "workshopMonthly": "Taller mensual",
+    "thisMonth": "Este mes",
+    "yourDailyLimit": "Tu límite diario",
+    "today": "Hoy",
     "user": "Usuario",
+    "resets": "Reinicia",
+    "resetsLabel": "Reinicia:",
+    "period": "Período",
+    "periodLabel": "Período:",
+    "information": "Información",
+    "vehicleDetails": "Detalles del vehículo",
+    "summary": "Resumen",
+    "dailyBreakdown": "Desglose diario",
+    "tokenUsageReport": "Reporte de uso de tokens",
+    "close": "Cerrar",
     "alerts": {
       "lowTokens": "Tokens bajos",
       "criticalTokens": "Tokens críticos",
@@ -255,6 +310,9 @@
   },
   "history": {
     "title": "Historial",
+    "consultationHistory": "Historial de consultas",
+    "viewAndManage": "Ver y gestionar todas tus consultas de diagnóstico de vehículos",
+    "pleaseSelectWorkshop": "Por favor selecciona un taller para ver el historial.",
     "consultations": "Consultas",
     "sessions": "Sesiones",
     "noHistory": "No hay historial disponible",
@@ -264,9 +322,14 @@
     "noConsultationsMatch": "No hay consultas que coincidan con los filtros actuales.",
     "filter": "Filtrar",
     "search": "Buscar",
+    "searchThreads": "Buscar hilos...",
     "dateRange": "Rango de fechas",
     "status": "Estado",
-    "all": "Todos"
+    "resolved": "Resuelto",
+    "pending": "Pendiente",
+    "all": "Todos",
+    "exportCsv": "Exportar CSV",
+    "clearFilters": "Limpiar filtros"
   },
   "team": {
     "title": "Equipo",
@@ -291,6 +354,30 @@
     "security": "Seguridad",
     "general": "General",
     "customization": "Personalización",
+    "title": "Configuración",
+    "subtitle": "Configurar ajustes del taller y cuenta",
+    "selectWorkshop": "Por favor selecciona un taller para ver la configuración.",
+    "loading": "Cargando configuración...",
+    "workshopSettings": {
+      "title": "Configuración del taller",
+      "subtitle": "Gestiona la información general y límites de tu taller",
+      "noWorkshopSelected": "No hay taller seleccionado",
+      "basicInformation": "Información básica",
+      "workshopName": "Nombre del taller",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Descripción del taller...",
+      "tokenLimits": "Límites de tokens",
+      "monthlyTokenLimit": "Límite mensual de tokens",
+      "monthlyTokenLimitDescription": "Número máximo de tokens que se pueden usar por mes para este taller",
+      "workshopInformation": "Información del taller",
+      "workshopId": "ID del taller",
+      "slug": "Slug",
+      "status": "Estado",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "createdAt": "Creado en",
+      "saveSettings": "Guardar configuración"
+    },
     "save": "Guardar cambios",
     "saving": "Guardando...",
     "logoPreview": "Vista previa del logo",
@@ -339,7 +426,59 @@
     "success": "Éxito",
     "error": "Error",
     "warning": "Advertencia",
-    "info": "Información"
+    "info": "Información",
+    "deletionSuccessful": "Eliminación exitosa",
+    "downloadComplete": "Descarga completa",
+    "downloadError": "Error de descarga",
+    "validationError": "Error de validación",
+    "vehicleAlreadyExists": "Vehículo ya existe",
+    "vehicleFound": "Vehículo encontrado",
+    "workshopCreated": "Taller creado exitosamente",
+    "workshopCreatedOwner": "Taller creado exitosamente. Ahora eres el propietario.",
+    "creating": "Creando...",
+    "saving": "Guardando...",
+    "analyzing": "Analizando...",
+    "uploading": "Subiendo...",
+    "chooseFile": "Elegir archivo",
+    "threadsMarkedResolved": "hilos marcados como resueltos",
+    "threadsDeleted": "hilos eliminados exitosamente",
+    "threadDeleted": "Hilo de chat eliminado exitosamente",
+    "pdfDownloaded": "PDF descargado exitosamente",
+    "vehicleCreated": "Vehículo creado exitosamente",
+    "vehicleUpdated": "Vehículo actualizado exitosamente",
+    "vehicleDeleted": "Vehículo eliminado exitosamente",
+    "memberRoleUpdated": "Rol de miembro actualizado exitosamente",
+    "memberAdded": "Miembro agregado exitosamente",
+    "memberRemoved": "Miembro eliminado exitosamente",
+    "workshopSettingsUpdated": "Configuración del taller actualizada exitosamente",
+    "workshopCustomizationUpdated": "Personalización del taller actualizada exitosamente",
+    "customizationSaved": "Personalización guardada",
+    "saveCustomization": "Guardar personalización",
+    "saveSettings": "Guardar configuración",
+    "createWorkshop": "Crear taller",
+    "noVerificationToken": "No se encontró token de verificación.",
+    "emailVerified": "Correo verificado",
+    "noWorkshopSelected": "No hay taller seleccionado",
+    "confirmDeleteThreads": "¿Estás seguro de que deseas eliminar {count} hilos seleccionados? Esta acción no se puede deshacer.",
+    "confirmDeleteThread": "¿Estás seguro de que deseas eliminar este hilo de chat? Esta acción no se puede deshacer.",
+    "confirmDeleteThreadWithPlate": "¿Estás seguro de que deseas eliminar el historial de chat de {plate}? Esta acción no se puede deshacer.",
+    "failedToUpdateThreads": "No se pudieron actualizar los hilos",
+    "failedToDeleteThreads": "No se pudieron eliminar los hilos",
+    "failedToDeleteThread": "No se pudo eliminar el hilo",
+    "failedToDownloadPDF": "No se pudo descargar el PDF. Por favor revisa los logs del servidor para más detalles.",
+    "vehicleAlreadyExistsMessage": "Ya existe un vehículo con esta placa",
+    "existingVehicleFound": "Vehículo existente encontrado y mostrado en la lista",
+    "workshopNameRequired": "El nombre del taller es requerido",
+    "monthlyTokenLimitRequired": "El límite mensual de tokens debe ser un número positivo",
+    "selectWorkshop": "Seleccionar taller",
+    "fileTypes": "Imágenes, PDFs o archivos de texto (máx. 10MB)",
+    "describeIssue": "Describe el problema",
+    "supportsMarkdown": "Soporta formato Markdown.",
+    "estimatedTokens": "Tokens estimados",
+    "aiDiagnosticResult": "Resultado del diagnóstico IA"
+  },
+  "consultationForm": {
+    "runDiagnostics": "Ejecutar diagnóstico"
   },
   "signup": {
     "verifyingEmail": "Verificando correo electrónico...",
@@ -356,25 +495,6 @@
     "registrationFailed": "Registro fallido",
     "emailVerified": "Correo verificado",
     "verificationFailed": "Verificación fallida"
-  },
-  "dashboard": {
-    "overview": "Resumen de tu actividad de diagnósticos y métricas del sistema",
-    "loadingData": "Cargando datos del panel...",
-    "totalConsultations": "Consultas totales",
-    "tokensUsed": "Tokens usados",
-    "thisMonth": "Este mes",
-    "allTime": "Todo el tiempo",
-    "noDataYet": "Aún no hay datos",
-    "resolved": "Resueltas",
-    "issuesResolved": "Problemas resueltos",
-    "pending": "Pendientes",
-    "awaitingResolution": "Esperando resolución",
-    "recentActivity": "Actividad reciente",
-    "noRecentConsultations": "No hay consultas recientes. Comienza creando una nueva consulta.",
-    "quickActions": "Acciones rápidas",
-    "startNewChat": "Iniciar nuevo chat",
-    "viewHistory": "Ver historial",
-    "resolvedStatus": "Resuelto"
   },
   "chat": {
     "emptyState": {

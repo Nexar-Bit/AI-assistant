@@ -52,7 +52,7 @@ export function VehiclesPage() {
         data: err.response?.data,
         message: err.message,
       }); // Debug log
-      const errorMessage = err.response?.data?.detail || err.message || "Failed to load vehicles";
+      const errorMessage = err.response?.data?.detail || err.message || "No se pudieron cargar los vehículos";
       setError(errorMessage);
       // Only show critical notification for non-404 errors (empty list is not an error)
       if (err.response?.status !== 404) {
@@ -79,14 +79,14 @@ export function VehiclesPage() {
       setVehicles([vehicle, ...vehicles]);
       setShowCreateModal(false);
       resetForm();
-      showSuccess("Vehicle created successfully", "Success");
+      showSuccess("Vehículo creado exitosamente", "Éxito");
     } catch (err: any) {
       console.error("Failed to create vehicle:", err);
       
       // Handle 409 Conflict - vehicle already exists
       if (err.response?.status === 409) {
-        const errorMessage = err.response?.data?.detail || "Vehicle with this license plate already exists";
-        showWarning(errorMessage, "Vehicle Already Exists");
+        const errorMessage = err.response?.data?.detail || "Ya existe un vehículo con esta placa";
+        showWarning(errorMessage, "Vehículo ya existe");
         
         // Try to find and display the existing vehicle
         try {
@@ -94,7 +94,7 @@ export function VehiclesPage() {
           if (existingVehicles.length > 0) {
             // Refresh the vehicles list to show the existing vehicle
             await loadVehicles();
-            showInfo("Existing vehicle found and displayed in the list", "Vehicle Found");
+            showInfo("Vehículo existente encontrado y mostrado en la lista", "Vehículo encontrado");
             setShowCreateModal(false);
             resetForm();
           }
@@ -106,7 +106,7 @@ export function VehiclesPage() {
         }
       } else {
         // Handle other errors
-        showCritical(err.response?.data?.detail || "Failed to create vehicle", "Error");
+        showCritical(err.response?.data?.detail || "No se pudo crear el vehículo", "Error");
       }
     }
   };
@@ -119,23 +119,23 @@ export function VehiclesPage() {
       setVehicles(vehicles.map((v) => (v.id === updated.id ? updated : v)));
       setEditingVehicle(null);
       resetForm();
-      showSuccess("Vehicle updated successfully", "Success");
+      showSuccess("Vehículo actualizado exitosamente", "Éxito");
     } catch (err: any) {
       console.error("Failed to update vehicle:", err);
-      showCritical(err.response?.data?.detail || "Failed to update vehicle", "Error");
+      showCritical(err.response?.data?.detail || "No se pudo actualizar el vehículo", "Error");
     }
   };
 
   const handleDelete = async (vehicleId: string) => {
-    if (!confirm("Are you sure you want to delete this vehicle?")) return;
+    if (!confirm("¿Estás seguro de que deseas eliminar este vehículo?")) return;
 
     try {
       await deleteVehicle(vehicleId);
       setVehicles(vehicles.filter((v) => v.id !== vehicleId));
-      showSuccess("Vehicle deleted successfully", "Success");
+      showSuccess("Vehículo eliminado exitosamente", "Éxito");
     } catch (err: any) {
       console.error("Failed to delete vehicle:", err);
-      showCritical(err.response?.data?.detail || "Failed to delete vehicle", "Error");
+      showCritical(err.response?.data?.detail || "No se pudo eliminar el vehículo", "Error");
     }
   };
 
@@ -175,7 +175,7 @@ export function VehiclesPage() {
     return (
       <div className="space-y-6 animate-fade-in p-6">
         <div className="card text-center py-12">
-          <p className="text-industrial-400">Please select a workshop to view vehicles.</p>
+          <p className="text-industrial-400">Por favor selecciona un taller para ver los vehículos.</p>
         </div>
       </div>
     );
@@ -185,9 +185,9 @@ export function VehiclesPage() {
     <div className="space-y-6 animate-fade-in p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-industrial-100 mb-2">Vehicles</h1>
+          <h1 className="text-3xl font-bold text-industrial-100 mb-2">Vehículos</h1>
           <p className="text-industrial-400">
-            Manage your vehicle database
+            Gestiona tu base de datos de vehículos
           </p>
         </div>
         <button
@@ -197,7 +197,7 @@ export function VehiclesPage() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          Add Vehicle
+          Agregar vehículo
         </button>
       </div>
 
@@ -216,7 +216,7 @@ export function VehiclesPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by license plate..."
+            placeholder="Buscar por placa..."
             className="input-industrial w-full pl-10"
           />
         </div>
@@ -235,7 +235,7 @@ export function VehiclesPage() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p className="text-industrial-400">Loading vehicles...</p>
+            <p className="text-industrial-400">Cargando vehículos...</p>
           </div>
         </div>
       ) : vehicles.length === 0 ? (
@@ -243,12 +243,12 @@ export function VehiclesPage() {
           <svg className="w-12 h-12 text-industrial-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
           </svg>
-          <p className="text-industrial-400 font-medium mb-4">No vehicles found.</p>
+          <p className="text-industrial-400 font-medium mb-4">No se encontraron vehículos.</p>
           <button
             onClick={() => setShowCreateModal(true)}
             className="btn-primary"
           >
-            Add Your First Vehicle
+            Agregar tu primer vehículo
           </button>
         </div>
       ) : (
@@ -257,25 +257,25 @@ export function VehiclesPage() {
             <thead className="bg-industrial-800/50 border-b border-industrial-700/50">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  License Plate
+                  Placa
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Make & Model
+                  Marca y Modelo
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Year
+                  Año
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Current KM
+                  Kilometraje Actual
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Fuel Type
+                  Tipo de Combustible
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Created
+                  Creado
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
-                  Actions
+                  Acciones
                 </th>
               </tr>
             </thead>
@@ -309,7 +309,7 @@ export function VehiclesPage() {
                           onClick={() => startEdit(vehicle)}
                           className="text-xs text-primary-400 hover:text-primary-300 transition-colors"
                         >
-                          Edit
+                          Editar
                         </button>
                       </PermissionGate>
                       <PermissionGate permission="deleteVehicle">
@@ -317,7 +317,7 @@ export function VehiclesPage() {
                           onClick={() => handleDelete(vehicle.id)}
                           className="text-xs text-red-400 hover:text-red-300 transition-colors"
                         >
-                          Delete
+                          Eliminar
                         </button>
                       </PermissionGate>
                     </div>
@@ -335,7 +335,7 @@ export function VehiclesPage() {
           <div className="card max-w-2xl w-full">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-industrial-100">
-                {editingVehicle ? "Edit Vehicle" : "Add New Vehicle"}
+                {editingVehicle ? "Editar vehículo" : "Nuevo vehículo"}
               </h2>
               <button
                 onClick={() => {
@@ -354,7 +354,7 @@ export function VehiclesPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-medium text-industrial-300 mb-1 block">
-                    License Plate *
+                    Placa *
                   </label>
                   <input
                     type="text"
@@ -369,7 +369,7 @@ export function VehiclesPage() {
                 </div>
                 <div>
                   <label className="text-xs font-medium text-industrial-300 mb-1 block">
-                    Current KM
+                    Kilometraje Actual
                   </label>
                   <input
                     type="number"
@@ -388,7 +388,7 @@ export function VehiclesPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-medium text-industrial-300 mb-1 block">Make</label>
+                  <label className="text-xs font-medium text-industrial-300 mb-1 block">Marca</label>
                   <input
                     type="text"
                     value={formData.make}
@@ -398,7 +398,7 @@ export function VehiclesPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-industrial-300 mb-1 block">Model</label>
+                  <label className="text-xs font-medium text-industrial-300 mb-1 block">Modelo</label>
                   <input
                     type="text"
                     value={formData.model}
@@ -411,7 +411,7 @@ export function VehiclesPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-medium text-industrial-300 mb-1 block">Year</label>
+                  <label className="text-xs font-medium text-industrial-300 mb-1 block">Año</label>
                   <input
                     type="number"
                     value={formData.year || ""}
@@ -428,23 +428,23 @@ export function VehiclesPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-industrial-300 mb-1 block">Fuel Type</label>
+                  <label className="text-xs font-medium text-industrial-300 mb-1 block">Tipo de Combustible</label>
                   <select
                     value={formData.fuel_type}
                     onChange={(e) => setFormData({ ...formData, fuel_type: e.target.value })}
                     className="input-industrial"
                   >
-                    <option value="">Select...</option>
-                    <option value="Gasoline">Gasoline</option>
-                    <option value="Diesel">Diesel</option>
-                    <option value="Electric">Electric</option>
-                    <option value="Hybrid">Hybrid</option>
+                    <option value="">Seleccionar...</option>
+                    <option value="Gasoline">Gasolina</option>
+                    <option value="Diesel">Diésel</option>
+                    <option value="Electric">Eléctrico</option>
+                    <option value="Hybrid">Híbrido</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-medium text-industrial-300 mb-1 block">Engine Type</label>
+                <label className="text-xs font-medium text-industrial-300 mb-1 block">Tipo de Motor</label>
                 <input
                   type="text"
                   value={formData.engine_type}
@@ -461,7 +461,7 @@ export function VehiclesPage() {
                   value={formData.vin}
                   onChange={(e) => setFormData({ ...formData, vin: e.target.value.toUpperCase() })}
                   className="input-industrial"
-                  placeholder="VIN Number"
+                  placeholder="Número VIN"
                 />
               </div>
 
@@ -471,7 +471,7 @@ export function VehiclesPage() {
                   disabled={!formData.license_plate.trim()}
                   className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {editingVehicle ? "Update Vehicle" : "Create Vehicle"}
+                  {editingVehicle ? "Actualizar vehículo" : "Crear vehículo"}
                 </button>
                 <button
                   onClick={() => {
@@ -480,7 +480,7 @@ export function VehiclesPage() {
                   }}
                   className="btn-secondary"
                 >
-                  Cancel
+                  Cancelar
                 </button>
               </div>
             </div>

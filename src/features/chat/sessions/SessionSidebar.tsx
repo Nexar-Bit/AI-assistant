@@ -27,7 +27,7 @@ export function SessionSidebar({
       <div className="p-4 border-b border-industrial-800">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-semibold text-industrial-300 uppercase tracking-wider">
-            Chat Sessions
+            Sesiones de chat
           </h2>
           <Button
             variant="primary"
@@ -35,7 +35,7 @@ export function SessionSidebar({
             onClick={onCreateSession}
           >
             <MessageSquareIcon size={14} className="mr-1" />
-            New
+            Nuevo
           </Button>
         </div>
         {/* Search */}

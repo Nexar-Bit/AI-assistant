@@ -1,7 +1,6 @@
 /** Chat input component with markdown support, quick actions, and real-time token counter */
 
 import React, { useState, useRef, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { DiagnosticCode } from "../common/DiagnosticCode";
 
 interface ChatInputSectionProps {
@@ -38,7 +37,6 @@ export function ChatInputSection({
   onErrorCodesChange,
   vehicleData,
 }: ChatInputSectionProps) {
-  const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [showErrorCodeInput, setShowErrorCodeInput] = useState(false);
   const [errorCodeInput, setErrorCodeInput] = useState("");
@@ -46,15 +44,15 @@ export function ChatInputSection({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const placeholder = placeholderProp || t("chat.input.placeholder");
+  const placeholder = placeholderProp || "💬 Describe el problema o haz una pregunta...";
   
-  const VEHICLE_TEMPLATE = `${t("chat.vehicleTemplate.vehicleInformation")}
-- ${t("chat.vehicleTemplate.licensePlate")} {license_plate}
-- ${t("chat.vehicleTemplate.makeModel")} {make} {model}
-- ${t("chat.vehicleTemplate.year")} {year}
-- ${t("chat.vehicleTemplate.currentKm")} {current_km}
+  const VEHICLE_TEMPLATE = `Información del vehículo:
+- Placa: {license_plate}
+- Marca/Modelo: {make} {model}
+- Año: {year}
+- Kilometraje actual: {current_km}
 
-${t("chat.vehicleTemplate.issueDescription")}`;
+Descripción del problema:`;
 
   // Calculate tokens from content (for display)
   const calculatedTokens = estimateTokens(content);
@@ -195,7 +193,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
           <button
             onClick={() => fileInputRef.current?.click()}
             className="touch-target p-2 hover:bg-industrial-800/50 rounded-lg transition-colors flex items-center justify-center"
-            title={t("common.attachFiles")}
+            title="Adjuntar archivos/imágenes"
             disabled={disabled}
           >
             <span className="text-lg">📎</span>
@@ -213,7 +211,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
           <button
             onClick={handleInsertVehicleTemplate}
             className="touch-target p-2 hover:bg-industrial-800/50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            title={t("common.insertVehicleTemplate")}
+            title="Insertar plantilla de vehículo"
             disabled={disabled || !vehicleData}
           >
             <span className="text-lg">🚗</span>
@@ -223,7 +221,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
           <button
             onClick={handleInsertErrorCode}
             className="touch-target p-2 hover:bg-industrial-800/50 rounded-lg transition-colors flex items-center justify-center"
-            title={t("common.insertErrorCode")}
+            title="Insertar código de error"
             disabled={disabled}
           >
             <span className="text-lg">⚙️</span>
@@ -233,7 +231,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
           <button
             onClick={handleSaveAsTemplate}
             className="touch-target p-2 hover:bg-industrial-800/50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            title={t("common.saveAsTemplate")}
+            title="Guardar como plantilla"
             disabled={disabled || !content.trim()}
           >
             <span className="text-lg">💾</span>
@@ -245,7 +243,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
           {/* Token Counter - Solo si se proporcionan los datos */}
           {remainingTokens !== undefined && tokenLimit !== undefined && (
           <div className="text-sm font-mono text-industrial-400">
-              {t("common.tokens")}{" "}
+              TOKENS:{" "}
             <span
               className={
                 tokensRemaining < 1000
@@ -267,7 +265,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
             disabled={disabled || !content.trim()}
             className="touch-target px-6 py-2 bg-primary-600 hover:bg-primary-500 disabled:bg-industrial-700 disabled:text-industrial-500 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-medium"
           >
-            {t("chat.input.send")}
+            ENVIAR
           </button>
         </div>
       </div>
@@ -281,7 +279,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
                 type="text"
                 value={errorCodeInput}
                 onChange={(e) => setErrorCodeInput(e.target.value)}
-                placeholder={t("chat.input.errorCodePlaceholder")}
+                placeholder="Ej: P0301, P0302"
                 className="flex-1 px-3 py-2 bg-industrial-900 border border-industrial-700 rounded-lg text-industrial-100 placeholder:text-industrial-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 text-sm"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -294,7 +292,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
                 onClick={handleAddErrorCode}
                 className="touch-target px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors text-sm font-medium"
               >
-{t("chat.input.add")}
+Agregar
               </button>
               <button
                 onClick={() => {
@@ -303,11 +301,11 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
                 }}
                 className="touch-target px-4 py-2 bg-industrial-700 hover:bg-industrial-600 text-industrial-200 rounded-lg transition-colors text-sm"
               >
-                 {t("chat.input.cancel")}
+                 Cancelar
               </button>
             </div>
             <p className="text-xs text-industrial-500">
-               {t("chat.input.enterDiagnosticCodes")}
+               Ingresa códigos de diagnóstico (ej: P0301, P0302) separados por comas
             </p>
           </div>
         </div>
@@ -317,14 +315,14 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
       {errorCodes.length > 0 && (
         <div className="px-4 pb-3 border-t border-industrial-800">
           <div className="mt-3 flex items-center gap-2 flex-wrap">
-             <span className="text-xs text-industrial-400">{t("chat.input.errorCodesLabel")}</span>
+             <span className="text-xs text-industrial-400">Códigos de error:</span>
             {errorCodes.map((code) => (
               <div key={code} className="flex items-center gap-1">
                 <DiagnosticCode code={code} variant="error" />
                 <button
                   onClick={() => handleRemoveErrorCode(code)}
                   className="text-industrial-500 hover:text-industrial-300 text-xs ml-1"
-                   title={t("chat.input.removeErrorCode")}
+                   title="Eliminar código de error"
                 >
                   ×
                 </button>
@@ -338,7 +336,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
       {attachments.length > 0 && (
         <div className="px-4 pb-3 border-t border-industrial-800">
           <div className="mt-3 flex items-center gap-2 flex-wrap">
-             <span className="text-xs text-industrial-400">{t("chat.input.attachmentsLabel")}</span>
+             <span className="text-xs text-industrial-400">Adjuntos:</span>
             {attachments.map((file, index) => (
               <div
                 key={index}
@@ -353,7 +351,7 @@ ${t("chat.vehicleTemplate.issueDescription")}`;
                 <button
                   onClick={() => handleRemoveAttachment(index)}
                   className="text-industrial-500 hover:text-industrial-300"
-                   title={t("chat.input.removeAttachment")}
+                   title="Eliminar adjunto"
                 >
                   ×
                 </button>

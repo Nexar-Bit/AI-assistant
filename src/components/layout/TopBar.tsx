@@ -120,7 +120,7 @@ export function TopBar() {
 
   const handleCreateWorkshop = async () => {
     if (!createData.name.trim()) {
-      showCritical("Workshop name is required", "Validation Error");
+      showCritical("El nombre del taller es requerido", "Error de validación");
       return;
     }
 
@@ -141,10 +141,10 @@ export function TopBar() {
       setShowCreateModal(false);
       setShowWorkshopMenu(false);
       setCreateData({ name: "", description: "", monthly_token_limit: 100000 });
-      showSuccess("Workshop created successfully! You are now the owner.", "Success");
+      showSuccess("Taller creado exitosamente. Ahora eres el propietario.", "Éxito");
     } catch (err: any) {
       console.error("Failed to create workshop:", err);
-      showCritical(err.response?.data?.detail || "Failed to create workshop", "Error");
+      showCritical(err.response?.data?.detail || "No se pudo crear el taller", "Error");
     } finally {
       setCreating(false);
     }
@@ -173,7 +173,7 @@ export function TopBar() {
           >
             <BuildingIcon className="w-5 h-5 text-primary-400" />
             <span className="text-sm font-semibold text-white truncate">
-              {currentWorkshop?.name || "Select Workshop"}
+              {currentWorkshop?.name || "Seleccionar taller"}
             </span>
             <ChevronDownIcon
               className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${
@@ -344,7 +344,7 @@ export function TopBar() {
                   disabled={creating || !createData.name.trim()}
                   className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {creating ? "Creating..." : "Create Workshop"}
+                  {creating ? "Creando..." : "Crear taller"}
                 </button>
                 <button
                   onClick={() => {

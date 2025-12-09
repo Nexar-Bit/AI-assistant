@@ -30,11 +30,11 @@ export function TokenUsageReportModal({
   tokenData,
 }: TokenUsageReportModalProps) {
   return (
-    <Modal title={`Token Usage Report - ${tokenData.label}`} open={open} onClose={onClose}>
+    <Modal title={`Reporte de uso de tokens - ${tokenData.label}`} open={open} onClose={onClose}>
       <div className="space-y-6">
         {/* Summary */}
         <div className="card-industrial">
-          <h3 className="text-sm font-semibold text-industrial-200 mb-3">Summary</h3>
+          <h3 className="text-sm font-semibold text-industrial-200 mb-3">Resumen</h3>
           <TokenMeter
             used={tokenData.used}
             limit={tokenData.limit}
@@ -44,12 +44,12 @@ export function TokenUsageReportModal({
           />
           {tokenData.period && (
             <div className="mt-3 text-xs text-industrial-500">
-              Period: {tokenData.period}
+              Período: {tokenData.period}
             </div>
           )}
           {tokenData.resetDate && (
             <div className="mt-1 text-xs text-industrial-500">
-              Resets: {new Date(tokenData.resetDate).toLocaleDateString()}
+              Reinicia: {new Date(tokenData.resetDate).toLocaleDateString()}
             </div>
           )}
         </div>
@@ -57,14 +57,14 @@ export function TokenUsageReportModal({
         {/* Breakdown Table */}
         {tokenData.breakdown && tokenData.breakdown.length > 0 && (
           <div className="card-industrial">
-            <h3 className="text-sm font-semibold text-industrial-200 mb-3">Daily Breakdown</h3>
+            <h3 className="text-sm font-semibold text-industrial-200 mb-3">Desglose diario</h3>
             <div className="overflow-x-auto">
               <table className="min-w-full text-xs">
                 <thead>
                   <tr className="border-b border-industrial-700">
-                    <th className="text-left py-2 px-3 text-industrial-400 font-semibold">Date</th>
-                    <th className="text-right py-2 px-3 text-industrial-400 font-semibold">Input</th>
-                    <th className="text-right py-2 px-3 text-industrial-400 font-semibold">Output</th>
+                    <th className="text-left py-2 px-3 text-industrial-400 font-semibold">Fecha</th>
+                    <th className="text-right py-2 px-3 text-industrial-400 font-semibold">Entrada</th>
+                    <th className="text-right py-2 px-3 text-industrial-400 font-semibold">Salida</th>
                     <th className="text-right py-2 px-3 text-industrial-400 font-semibold">Total</th>
                   </tr>
                 </thead>
@@ -97,7 +97,7 @@ export function TokenUsageReportModal({
             onClick={onClose}
             className="bg-industrial-700 hover:bg-industrial-600 text-industrial-100 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           >
-            Close
+            Cerrar
           </button>
         </div>
       </div>

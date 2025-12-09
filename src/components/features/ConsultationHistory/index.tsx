@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useConsultations } from "../../../hooks/useConsultations";
 import { Table } from "../../common/Table";
 import { formatDateTime } from "../../../utils/formatters";
@@ -10,7 +9,6 @@ import { useNotification } from "../../../components/layout/NotificationProvider
 import type { Consultation } from "../../../types/consultation.types";
 
 export function ConsultationHistory() {
-  const { t } = useTranslation();
   const { consultations, loading, error, hasMore, loadMore, filters, setFilters } =
     useConsultations();
   const { showSuccess, showCritical } = useNotification();
@@ -89,10 +87,10 @@ export function ConsultationHistory() {
     try {
       const filename = `consultation-${licensePlate}-${new Date().toISOString().split('T')[0]}.pdf`;
       await downloadPDF(consultationId, filename);
-      showSuccess("PDF downloaded successfully", "Download Complete");
+      showSuccess("PDF descargado exitosamente", "Descarga completa");
     } catch (error: any) {
       console.error("Failed to download PDF:", error);
-      showCritical(error.message || t("chat.errors.failedToDownloadPDF"), t("common.error"));
+      showCritical(error.message || "No se pudo descargar el PDF. Por favor revisa los logs del servidor para más detalles.", "Error");
     } finally {
       setDownloading(null);
     }
@@ -106,7 +104,7 @@ export function ConsultationHistory() {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-industrial-400">{t("history.loadingConsultations")}</p>
+          <p className="text-industrial-400">Cargando consultas...</p>
         </div>
       </div>
     );
@@ -117,7 +115,7 @@ export function ConsultationHistory() {
       <div className="card">
         <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-industrial-300">{t("common.licensePlate")}</label>
+          <label className="text-xs font-medium text-industrial-300">Placa</label>
           <input
             className="input-industrial"
             value={filters.license_plate || ""}
@@ -131,7 +129,7 @@ export function ConsultationHistory() {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-industrial-300">{t("common.status")}</label>
+          <label className="text-xs font-medium text-industrial-300">Estado</label>
           <select
             className="input-industrial"
             value={
@@ -154,9 +152,9 @@ export function ConsultationHistory() {
               });
             }}
           >
-            <option value="">{t("history.all")}</option>
-            <option value="resolved">{t("dashboard.stats.resolved")}</option>
-            <option value="pending">{t("dashboard.stats.pending")}</option>
+            <option value="">Todos</option>
+            <option value="resolved">Resueltas</option>
+            <option value="pending">Pendientes</option>
           </select>
         </div>
         <div className="flex flex-col gap-1.5">
@@ -188,10 +186,10 @@ export function ConsultationHistory() {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-industrial-300">{t("common.search")}</label>
+          <label className="text-xs font-medium text-industrial-300">Buscar</label>
           <input
             className="input-industrial"
-            placeholder={t("common.queryResponseText")}
+            placeholder="Texto de consulta / respuesta"
             value={filters.q || ""}
             onChange={(e) =>
               setFilters({
@@ -235,7 +233,7 @@ export function ConsultationHistory() {
           <svg className="w-12 h-12 text-industrial-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <p className="text-industrial-400 font-medium">{t("history.noConsultationsMatch")}</p>
+          <p className="text-industrial-400 font-medium">No hay consultas que coincidan con los filtros actuales.</p>
         </div>
       ) : (
         <div className="card overflow-hidden p-0">
@@ -314,14 +312,14 @@ export function ConsultationHistory() {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          {t("common.downloading")}
+                          Descargando...
                         </>
                       ) : (
                         <>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
-                          Download PDF
+                          Descargar PDF
                         </>
                       )}
                     </button>
@@ -342,7 +340,7 @@ export function ConsultationHistory() {
             onClick={loadMore}
             disabled={loading}
           >
-            {loading ? t("common.loading") : t("common.loadMore")}
+            {loading ? "Cargando..." : "Cargar más"}
           </Button>
         </div>
       )}

@@ -1,7 +1,6 @@
 /** Sidebar with modern vibrant design and latest icons */
 
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import { useWorkshopStore } from "../../../stores/workshop.store";
 import { PermissionGate } from "../../common/PermissionGate";
@@ -61,10 +60,11 @@ const SparklesIcon = ({ className = "", size = 24 }: { className?: string; size?
   </svg>
 );
 
+// Navigation items
 const navItems = [
   {
     to: "/",
-    label: "Dashboard",
+    label: "Panel",
     icon: HomeIcon,
     gradient: "from-blue-500 to-cyan-500",
     permission: "dashboard" as const,
@@ -78,28 +78,28 @@ const navItems = [
   },
   {
     to: "/history",
-    label: "History",
+    label: "Historial",
     icon: ClockIcon,
     gradient: "from-orange-500 to-amber-500",
     permission: "history" as const,
   },
   {
     to: "/vehicles",
-    label: "Vehicles",
+    label: "Vehículos",
     icon: CarIcon,
     gradient: "from-green-500 to-emerald-500",
     permission: "vehicles" as const,
   },
   {
     to: "/team",
-    label: "Team",
+    label: "Equipo",
     icon: UsersIcon,
     gradient: "from-indigo-500 to-blue-500",
     permission: "team" as const,
   },
   {
     to: "/settings",
-    label: "Settings",
+    label: "Configuración",
     icon: SettingsIcon,
     gradient: "from-gray-500 to-slate-500",
     permission: "settings" as const,
@@ -317,7 +317,7 @@ export function Sidebar() {
             setIsCollapsed(!isCollapsed);
           }}
           className="w-full flex items-center justify-center h-10 rounded-xl text-slate-400 hover:text-white hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 transition-all duration-300 hover:scale-105"
-          title={isCollapsed ? t("settings.expandSidebar") : t("settings.collapseSidebar")}
+          title={isCollapsed ? "Expandir barra lateral" : "Contraer barra lateral"}
           type="button"
         >
           <svg

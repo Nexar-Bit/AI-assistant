@@ -155,6 +155,7 @@ export function usePermissions() {
     
     // Token management - SOLO admin/owner del taller
     viewTokenUsage: can("admin"),
+    viewTokenCounter: can("admin"), // Contador de tokens solo para admin/owner
     manageTokenLimits: can("owner"),
     
     // AI Providers

@@ -11,6 +11,7 @@ import { ConsultationPage } from "./pages/Consultation";
 import { HistoryPage } from "./pages/History";
 import { AdminPage } from "./pages/Admin";
 import { RegistrationManagement } from "./pages/Admin/RegistrationManagement";
+import { WorkshopDetailView } from "./pages/Admin/WorkshopDetail";
 import { ChatPage } from "./features/chat";
 import { VehiclesPage } from "./pages/Vehicles";
 import { TeamPage } from "./pages/Team";
@@ -83,6 +84,14 @@ function App() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <RegistrationManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/workshops/:workshopId" 
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <WorkshopDetailView />
                   </ProtectedRoute>
                 } 
               />

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { registerApi, verifyEmailApi, resendVerificationApi } from "../../api/auth";
 import { Button } from "../../components/common/Button";
@@ -7,7 +6,6 @@ import { Input } from "../../components/common/Input";
 import { useNotification } from "../../components/layout/NotificationProvider";
 
 export function SignupPage() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { showSuccess, showCritical, showInfo } = useNotification();
@@ -40,15 +38,15 @@ export function SignupPage() {
     setError(null);
     try {
       const result = await verifyEmailApi(token);
-      showSuccess(result.message, t("signup.emailVerified"));
+      showSuccess(result.message, "Correo verificado");
       setTimeout(() => {
         navigate("/login");
       }, 2000);
     } catch (err: any) {
       console.error(err);
-      const errorMessage = err.response?.data?.detail || t("auth.signup.failedToVerifyEmail");
+      const errorMessage = err.response?.data?.detail || "No se pudo verificar el correo electrónico";
       setError(errorMessage);
-      showCritical(errorMessage, t("signup.verificationFailed"));
+      showCritical(errorMessage, "Verificación fallida");
     } finally {
       setVerifying(false);
     }
@@ -61,12 +59,12 @@ export function SignupPage() {
     setError(null);
     try {
       await resendVerificationApi(registeredEmail);
-      showSuccess(t("auth.signup.verificationEmailSent"), t("signup.emailSent"));
+      showSuccess("Correo de verificación enviado. Por favor revisa tu bandeja de entrada.", "Correo enviado");
     } catch (err: any) {
       console.error(err);
-      const errorMessage = err.response?.data?.detail || t("auth.signup.failedToResendEmail");
+      const errorMessage = err.response?.data?.detail || "No se pudo reenviar el correo de verificación";
       setError(errorMessage);
-      showCritical(errorMessage, t("common.error"));
+      showCritical(errorMessage, "Error");
     } finally {
       setLoading(false);
     }
@@ -79,13 +77,13 @@ export function SignupPage() {
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      setError(t("auth.signup.passwordsNotMatch"));
+      setError("Las contraseñas no coinciden");
       setLoading(false);
       return;
     }
 
     if (formData.password.length < 12) {
-      setError(t("auth.signup.passwordTooShort"));
+      setError("La contraseña debe tener al menos 12 caracteres");
       setLoading(false);
       return;
     }
@@ -100,12 +98,12 @@ export function SignupPage() {
       
       setRegistered(true);
       setRegisteredEmail(formData.email);
-      showSuccess(result.message, t("auth.signup.registrationSuccess"));
+      showSuccess(result.message, "Registro exitoso");
     } catch (err: any) {
       console.error(err);
-      const errorMessage = err.response?.data?.detail || t("auth.signup.registrationFailed");
+      const errorMessage = err.response?.data?.detail || "No se pudo completar el registro";
       setError(errorMessage);
-      showCritical(errorMessage, t("signup.registrationFailed"));
+      showCritical(errorMessage, "Registro fallido");
     } finally {
       setLoading(false);
     }
@@ -132,7 +130,7 @@ export function SignupPage() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-industrial-100">{t("signup.verifyingEmail")}</h2>
+              <h2 className="text-xl font-bold text-industrial-100">Verificando correo electrónico...</h2>
             </div>
           </div>
         </div>
@@ -160,15 +158,15 @@ export function SignupPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-industrial-100 mb-2">{t("signup.registrationSuccessful")}</h2>
+              <h2 className="text-xl font-bold text-industrial-100 mb-2">¡Registro exitoso!</h2>
               <p className="text-sm text-industrial-400">
-                {t("signup.verificationLinkSent")} <strong>{registeredEmail}</strong>
+                Hemos enviado un enlace de verificación a <strong>{registeredEmail}</strong>
               </p>
             </div>
             
             <div className="space-y-4">
               <div className="rounded-lg bg-primary-500/10 border border-primary-500/20 px-4 py-3 text-sm text-primary-300">
-                {t("signup.checkEmail")}
+                Por favor revisa tu correo y haz clic en el enlace de verificación para activar tu cuenta.
               </div>
               
               <div className="flex gap-3">
@@ -178,13 +176,13 @@ export function SignupPage() {
                   className="flex-1"
                   variant="secondary"
                 >
-                  {loading ? t("signup.sending") : t("signup.resendEmail")}
+                  {loading ? "Enviando..." : "Reenviar correo"}
                 </Button>
                 <Button
                   onClick={() => navigate("/login")}
                   className="flex-1"
                 >
-                  {t("signup.goToLogin")}
+                  Ir a iniciar sesión
                 </Button>
               </div>
             </div>
@@ -224,17 +222,17 @@ export function SignupPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gradient-primary">
-                {t("auth.signup.title")}
+                Crear cuenta
               </h1>
-              <p className="text-xs text-industrial-400">{t("signup.joinPlatform")}</p>
+              <p className="text-xs text-industrial-400">Únete a Diagnósticos de Vehículos IA</p>
             </div>
           </div>
           <p className="mb-6 text-sm text-industrial-300">
-            {t("signup.signUpToStart")}
+            Regístrate para comenzar a usar la plataforma de diagnósticos de vehículos.
           </p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label={t("auth.signup.username")}
+              label="Usuario"
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               autoComplete="username"
@@ -242,10 +240,10 @@ export function SignupPage() {
               minLength={3}
               maxLength={50}
               pattern="[a-zA-Z0-9_-]+"
-              title={t("signup.usernameHelp")}
+              title="El nombre de usuario solo puede contener letras, números, guiones bajos y guiones"
             />
             <Input
-              label={t("auth.signup.email")}
+              label="Correo electrónico"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -253,7 +251,7 @@ export function SignupPage() {
               required
             />
             <Input
-              label={t("auth.signup.password")}
+              label="Contraseña"
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -262,10 +260,10 @@ export function SignupPage() {
               minLength={12}
             />
             <div className="text-xs text-industrial-500">
-              {t("signup.passwordHelp")}
+              La contraseña debe tener al menos 12 caracteres con mayúsculas, minúsculas, dígitos y caracteres especiales
             </div>
             <Input
-              label={t("auth.signup.confirmPassword")}
+              label="Confirmar contraseña"
               type="password"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
@@ -276,7 +274,7 @@ export function SignupPage() {
             
             <div>
               <label className="block text-sm font-medium text-industrial-300 mb-2">
-                {t("auth.signup.messagePlaceholder")} {t("auth.signup.optional")}
+                Mensaje para administradores (Opcional)
               </label>
               <textarea
                 name="registration_message"
@@ -287,7 +285,7 @@ export function SignupPage() {
                 maxLength={500}
                 rows={3}
                 className="w-full px-4 py-2 bg-industrial-800 border border-industrial-700 rounded-lg text-industrial-100 placeholder:text-industrial-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-colors"
-                placeholder={t("auth.signup.messageHint")}
+                placeholder="Cuéntanos sobre ti o tu taller..."
               />
               <p className="text-xs text-industrial-500 mt-1">
                 {formData.registration_message.length}/500
@@ -310,16 +308,16 @@ export function SignupPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  {t("auth.signup.creatingAccount")}
+                  Creando cuenta...
                 </>
               ) : (
-                t("auth.signup.createAccount")
+                <>Crear cuenta</>
               )}
             </Button>
             <div className="text-center text-sm text-industrial-400">
-              {t("auth.signup.alreadyHaveAccount")}{" "}
+              ¿Ya tienes una cuenta?{" "}
               <Link to="/login" className="text-primary-400 hover:text-primary-300 font-medium">
-                {t("auth.signup.signIn")}
+                Iniciar sesión
               </Link>
             </div>
           </form>

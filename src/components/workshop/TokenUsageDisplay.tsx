@@ -84,15 +84,15 @@ export function TokenUsageDisplay({ workshopId }: TokenUsageDisplayProps) {
           limit={user.daily_limit}
           inputTokens={user.input_tokens_today}
           outputTokens={user.output_tokens_today}
-          label="Your Daily Limit"
+          label="Tu límite diario"
           onDetailedReport={() => {
             setSelectedReport({
               used: user.daily_used || 0,
               limit: user.daily_limit,
               inputTokens: user.input_tokens_today,
               outputTokens: user.output_tokens_today,
-              label: "Your Daily Limit",
-              period: "Today",
+              label: "Tu límite diario",
+              period: "Hoy",
             });
             setReportModalOpen(true);
           }}
@@ -106,15 +106,15 @@ export function TokenUsageDisplay({ workshopId }: TokenUsageDisplayProps) {
           limit={workshop.monthly_limit || 0}
           inputTokens={workshop.input_tokens_month}
           outputTokens={workshop.output_tokens_month}
-          label="Workshop Monthly"
+          label="Taller mensual"
           onDetailedReport={() => {
             setSelectedReport({
               used: workshop.monthly_used || 0,
               limit: workshop.monthly_limit || 0,
               inputTokens: workshop.input_tokens_month,
               outputTokens: workshop.output_tokens_month,
-              label: "Workshop Monthly",
-              period: "This Month",
+              label: "Taller mensual",
+              period: "Este mes",
               resetDate: workshop.reset_date,
             });
             setReportModalOpen(true);

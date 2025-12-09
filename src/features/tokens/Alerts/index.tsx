@@ -28,12 +28,12 @@ export function TokenAlert({ type, message, remaining, resetDate }: TokenAlertPr
           <p className="text-xs font-medium text-industrial-200">{message}</p>
           {remaining !== undefined && (
             <p className="text-xs text-industrial-400 mt-1">
-              {remaining.toLocaleString()} tokens remaining
+              {remaining.toLocaleString()} restantes
             </p>
           )}
           {resetDate && (
             <p className="text-xs text-industrial-500 mt-1">
-              Resets: {new Date(resetDate).toLocaleDateString()}
+              Reinicia: {new Date(resetDate).toLocaleDateString()}
             </p>
           )}
         </div>

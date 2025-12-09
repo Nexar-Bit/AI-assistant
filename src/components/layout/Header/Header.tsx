@@ -1,9 +1,7 @@
-import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../stores/auth.store";
 import { Button } from "../../common/Button";
 
 export function Header() {
-  const { t } = useTranslation();
   const logout = useAuthStore((s) => s.logout);
   const user = useAuthStore((s) => s.accessToken); // You can add user info to store later
 
@@ -36,7 +34,7 @@ export function Header() {
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg glass text-sm">
             <div className="h-2 w-2 rounded-full bg-success-400 animate-pulse-slow"></div>
-            <span className="text-industrial-300">{t("common.online")}</span>
+            <span className="text-industrial-300">En línea</span>
           </div>
           <Button
             variant="ghost"

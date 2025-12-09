@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { getDashboardStats } from "../../api/chat";
 import { useWorkshopStore } from "../../stores/workshop.store";
@@ -8,7 +7,6 @@ import { ViewerDashboard } from "./ViewerDashboard";
 import type { DashboardStats } from "../../api/chat";
 
 export function DashboardPage() {
-  const { t } = useTranslation();
   const { currentWorkshop } = useWorkshopStore();
   const { canAccess, currentWorkshopRole } = usePermissions();
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -43,7 +41,7 @@ export function DashboardPage() {
           // Don't show error for 404 - endpoint not deployed yet
         } else {
           console.error("Failed to load dashboard stats:", err);
-          setError(err.response?.data?.detail || t("dashboard.failedToLoadStats"));
+          setError(err.response?.data?.detail || "No se pudieron cargar las estadísticas del panel");
         }
       } finally {
         setIsLoading(false);
@@ -63,9 +61,9 @@ export function DashboardPage() {
     <div className="space-y-6 animate-fade-in p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-industrial-100 mb-2">{t("dashboard.title")}</h1>
+          <h1 className="text-3xl font-bold text-industrial-100 mb-2">Panel de control</h1>
           <p className="text-industrial-400">
-            {t("dashboard.overview")}
+            Resumen de tu actividad de diagnósticos y métricas del sistema
           </p>
         </div>
       </div>
@@ -73,7 +71,7 @@ export function DashboardPage() {
       {isLoading ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-400"></div>
-          <p className="text-industrial-400 mt-4">{t("dashboard.loadingData")}</p>
+          <p className="text-industrial-400 mt-4">Cargando datos...</p>
         </div>
       ) : error ? (
         <div className="card-hover border-warning-500/50">
@@ -90,12 +88,12 @@ export function DashboardPage() {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-sm font-medium text-industrial-400 mb-1">{t("dashboard.stats.totalConsultations")}</h3>
+              <h3 className="text-sm font-medium text-industrial-400 mb-1">Consultas totales</h3>
               <p className="text-2xl font-bold text-industrial-100">
                 {stats?.total_consultations ?? 0}
               </p>
               <p className="text-xs text-industrial-500 mt-2">
-                {stats && stats.total_consultations > 0 ? t("common.allTime") : t("common.noDataYet")}
+                {stats && stats.total_consultations > 0 ? "Todo el tiempo" : "Sin datos aún"}
               </p>
             </div>
 
@@ -107,11 +105,11 @@ export function DashboardPage() {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-sm font-medium text-industrial-400 mb-1">{t("dashboard.stats.tokensUsed")}</h3>
+              <h3 className="text-sm font-medium text-industrial-400 mb-1">Tokens usados este mes</h3>
               <p className="text-2xl font-bold text-industrial-100">
                 {stats?.tokens_used_this_month.toLocaleString() ?? 0}
               </p>
-              <p className="text-xs text-industrial-500 mt-2">{t("common.thisMonth")}</p>
+              <p className="text-xs text-industrial-500 mt-2">Este mes</p>
             </div>
 
             <div className="card-hover">
@@ -122,11 +120,11 @@ export function DashboardPage() {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-sm font-medium text-industrial-400 mb-1">{t("dashboard.stats.resolved")}</h3>
+              <h3 className="text-sm font-medium text-industrial-400 mb-1">Resueltas</h3>
               <p className="text-2xl font-bold text-industrial-100">
                 {stats?.resolved_count ?? 0}
               </p>
-              <p className="text-xs text-industrial-500 mt-2">{t("dashboard.issuesResolved")}</p>
+              <p className="text-xs text-industrial-500 mt-2">Problemas resueltos</p>
             </div>
 
             <div className="card-hover">
@@ -137,17 +135,17 @@ export function DashboardPage() {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-sm font-medium text-industrial-400 mb-1">{t("dashboard.stats.pending")}</h3>
+              <h3 className="text-sm font-medium text-industrial-400 mb-1">Pendientes</h3>
               <p className="text-2xl font-bold text-industrial-100">
                 {stats?.pending_count ?? 0}
               </p>
-              <p className="text-xs text-industrial-500 mt-2">{t("dashboard.awaitingResolution")}</p>
+              <p className="text-xs text-industrial-500 mt-2">Esperando resolución</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="card">
-              <h2 className="text-lg font-semibold text-industrial-100 mb-4">{t("dashboard.stats.recentActivity")}</h2>
+              <h2 className="text-lg font-semibold text-industrial-100 mb-4">Actividad reciente</h2>
               {stats && stats.recent_activity.length > 0 ? (
                 <div className="space-y-3">
                   {stats.recent_activity.map((activity) => (
@@ -172,7 +170,7 @@ export function DashboardPage() {
                         </div>
                         {activity.is_resolved && (
                           <span className="ml-2 px-2 py-1 text-xs rounded-full bg-success-500/20 text-success-400">
-                            {t("dashboard.resolvedStatus")}
+                            Resuelto
                           </span>
                         )}
                       </div>
@@ -181,13 +179,13 @@ export function DashboardPage() {
                 </div>
               ) : (
                 <div className="text-sm text-industrial-400">
-                  {t("dashboard.noRecentConsultations")}
+                  No hay consultas recientes
                 </div>
               )}
             </div>
 
             <div className="card">
-              <h2 className="text-lg font-semibold text-industrial-100 mb-4">{t("dashboard.quickActions.title")}</h2>
+              <h2 className="text-lg font-semibold text-industrial-100 mb-4">Acciones rápidas</h2>
               <div className="space-y-3">
                 <Link
                   to="/chat"
@@ -198,7 +196,7 @@ export function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                   </div>
-                  <span className="text-sm font-medium text-industrial-200">{t("dashboard.startNewChat")}</span>
+                  <span className="text-sm font-medium text-industrial-200">Iniciar nuevo chat</span>
                 </Link>
                 <Link
                   to="/history"
@@ -209,7 +207,7 @@ export function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <span className="text-sm font-medium text-industrial-200">{t("dashboard.viewHistory")}</span>
+                  <span className="text-sm font-medium text-industrial-200">Ver historial</span>
                 </Link>
               </div>
             </div>

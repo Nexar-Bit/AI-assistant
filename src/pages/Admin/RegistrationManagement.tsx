@@ -3,7 +3,6 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNotification } from '../../components/layout/NotificationProvider';
 import {
   getPendingRegistrations,
@@ -12,7 +11,6 @@ import {
 } from '../../api/admin';
 
 export function RegistrationManagement() {
-  const { t } = useTranslation();
   const { showSuccess, showCritical } = useNotification();
   const [registrations, setRegistrations] = useState<PendingRegistration[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +55,7 @@ export function RegistrationManagement() {
   if (loading) {
     return (
       <div className="card">
-        <p className="text-industrial-400">{t('common.loading')}</p>
+        <p className="text-industrial-400">Cargando...</p>
       </div>
     );
   }

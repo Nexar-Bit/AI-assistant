@@ -105,7 +105,7 @@ export function ConsultationForm() {
           )}
         </div>
         <label className="flex flex-col gap-1 text-sm text-slate-200">
-          <span>Describe the issue</span>
+          <span>Describe el problema</span>
           <textarea
             className="min-h-[160px] rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
             value={query}
@@ -113,20 +113,20 @@ export function ConsultationForm() {
           />
         </label>
         <div className="flex items-center justify-between text-xs text-slate-400">
-          <span>Supports Markdown formatting.</span>
-          <span>Estimated tokens: {tokenEstimate}</span>
+          <span>Soporta formato Markdown.</span>
+          <span>Tokens estimados: {tokenEstimate}</span>
         </div>
         {error && (
           <div className="text-xs font-medium text-red-400">{error}</div>
         )}
         <Button type="submit" disabled={loading}>
-          {loading ? "Analyzing..." : "Run diagnostics"}
+          {loading ? "Analizando..." : "Ejecutar diagnóstico"}
         </Button>
       </form>
 
       <div className="space-y-2">
         <h3 className="text-sm font-semibold text-slate-100">
-          AI diagnostic result
+          Resultado del diagnóstico IA
         </h3>
         <div className="min-h-[200px] rounded-md border border-slate-800 bg-slate-950 p-3 text-sm text-slate-200">
           {response ? (

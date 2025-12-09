@@ -103,16 +103,16 @@ export function HistoryPage() {
       );
       setSelected(new Set());
       loadThreads(); // Reload to reflect changes
-      showSuccess(`${ids.length} threads marked as resolved`, "Success");
+      showSuccess(`${ids.length} hilos marcados como resueltos`, "Éxito");
     } catch (err: any) {
       console.error("Failed to mark threads as resolved:", err);
-      showCritical(err.response?.data?.detail || "Failed to update threads", "Error");
+      showCritical(err.response?.data?.detail || "No se pudieron actualizar los hilos", "Error");
     }
   };
 
   const handleBulkDelete = async () => {
     if (selected.size === 0) return;
-    if (!confirm(`Are you sure you want to delete ${selected.size} selected threads? This action cannot be undone.`)) {
+    if (!confirm(`¿Estás seguro de que deseas eliminar ${selected.size} hilos seleccionados? Esta acción no se puede deshacer.`)) {
       return;
     }
 
@@ -123,17 +123,17 @@ export function HistoryPage() {
       );
       setSelected(new Set());
       loadThreads(); // Reload to reflect changes
-      showSuccess(`${ids.length} threads deleted successfully`, "Deletion Successful");
+      showSuccess(`${ids.length} hilos eliminados exitosamente`, "Eliminación exitosa");
     } catch (err: any) {
       console.error("Failed to delete threads:", err);
-      showCritical(err.response?.data?.detail || "Failed to delete threads", "Error");
+      showCritical(err.response?.data?.detail || "No se pudieron eliminar los hilos", "Error");
     }
   };
 
   const handleDelete = async (threadId: string, licensePlate?: string) => {
     const confirmMessage = licensePlate
-      ? `Are you sure you want to delete the chat history for ${licensePlate}? This action cannot be undone.`
-      : `Are you sure you want to delete this chat thread? This action cannot be undone.`;
+      ? `¿Estás seguro de que deseas eliminar el historial de chat de ${licensePlate}? Esta acción no se puede deshacer.`
+      : `¿Estás seguro de que deseas eliminar este hilo de chat? Esta acción no se puede deshacer.`;
     
     if (!confirm(confirmMessage)) {
       return;
@@ -142,10 +142,10 @@ export function HistoryPage() {
     try {
       await deleteChatThread(threadId);
       loadThreads(); // Reload to reflect changes
-      showSuccess("Chat thread deleted successfully", "Deletion Successful");
+      showSuccess("Hilo de chat eliminado exitosamente", "Eliminación exitosa");
     } catch (err: any) {
       console.error("Failed to delete thread:", err);
-      showCritical(err.response?.data?.detail || "Failed to delete thread", "Error");
+      showCritical(err.response?.data?.detail || "No se pudo eliminar el hilo", "Error");
     }
   };
 
@@ -153,12 +153,12 @@ export function HistoryPage() {
     setDownloading(threadId);
     try {
       await downloadChatThreadPDFFile(threadId, licensePlate);
-      showSuccess("PDF downloaded successfully", "Download Complete");
+      showSuccess("PDF descargado exitosamente", "Descarga completa");
     } catch (error: any) {
       console.error("Failed to download PDF:", error);
       // Extract detailed error message
-      const errorMessage = error.message || error.response?.data?.detail || "Failed to download PDF. Please check server logs for details.";
-      showCritical(errorMessage, "Download Error");
+      const errorMessage = error.message || error.response?.data?.detail || "No se pudo descargar el PDF. Por favor revisa los logs del servidor para más detalles.";
+      showCritical(errorMessage, "Error de descarga");
     } finally {
       setDownloading(null);
     }
@@ -185,7 +185,7 @@ export function HistoryPage() {
     return (
       <div className="space-y-6 animate-fade-in p-6">
         <div className="card text-center py-12">
-          <p className="text-industrial-400">Please select a workshop to view history.</p>
+          <p className="text-industrial-400">Por favor selecciona un taller para ver el historial.</p>
         </div>
       </div>
     );
@@ -195,10 +195,10 @@ export function HistoryPage() {
     <div className="space-y-6 animate-fade-in p-6">
       <div>
         <h1 className="text-3xl font-bold text-industrial-100 mb-2">
-          Consultation History
+          Historial de consultas
         </h1>
         <p className="text-industrial-400">
-          View and manage all your vehicle diagnostic consultations
+          Ver y gestionar todas tus consultas de diagnóstico de vehículos
         </p>
       </div>
 
@@ -206,7 +206,7 @@ export function HistoryPage() {
       <div className="card">
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-industrial-300">License Plate</label>
+            <label className="text-xs font-medium text-industrial-300">Placa</label>
             <input
               className="input-industrial"
               value={filters.license_plate}
@@ -217,7 +217,7 @@ export function HistoryPage() {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-industrial-300">Status</label>
+            <label className="text-xs font-medium text-industrial-300">Estado</label>
             <select
               className="input-industrial"
               value={filters.status}
@@ -228,14 +228,14 @@ export function HistoryPage() {
                 })
               }
             >
-              <option value="all">All</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-              <option value="archived">Archived</option>
+              <option value="all">Todos</option>
+              <option value="active">Activo</option>
+              <option value="completed">Completado</option>
+              <option value="archived">Archivado</option>
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-industrial-300">Resolved</label>
+            <label className="text-xs font-medium text-industrial-300">Resuelto</label>
             <select
               className="input-industrial"
               value={
@@ -258,16 +258,16 @@ export function HistoryPage() {
                 });
               }}
             >
-              <option value="all">All</option>
-              <option value="resolved">Resolved</option>
-              <option value="pending">Pending</option>
+              <option value="all">Todos</option>
+              <option value="resolved">Resuelto</option>
+              <option value="pending">Pendiente</option>
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-industrial-300">Search</label>
+            <label className="text-xs font-medium text-industrial-300">Buscar</label>
             <input
               className="input-industrial"
-              placeholder="Search threads..."
+              placeholder="Buscar hilos..."
               value={filters.search}
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
@@ -280,21 +280,21 @@ export function HistoryPage() {
               disabled={threads.length === 0}
               className="btn-secondary text-xs disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Export CSV
+              Exportar CSV
             </button>
             <button
               onClick={handleBulkResolve}
               disabled={selected.size === 0}
               className="btn-secondary text-xs disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Mark Resolved ({selected.size})
+              Marcar como resuelto ({selected.size})
             </button>
             <button
               onClick={handleBulkDelete}
               disabled={selected.size === 0}
               className="btn-secondary text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Delete ({selected.size})
+              Eliminar ({selected.size})
             </button>
           </div>
         </div>
@@ -313,7 +313,7 @@ export function HistoryPage() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p className="text-industrial-400">Loading history...</p>
+            <p className="text-industrial-400">Cargando historial...</p>
           </div>
         </div>
       ) : threads.length === 0 ? (
@@ -321,7 +321,7 @@ export function HistoryPage() {
           <svg className="w-12 h-12 text-industrial-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <p className="text-industrial-400 font-medium">No threads match the current filters.</p>
+          <p className="text-industrial-400 font-medium">No hay consultas que coincidan con los filtros actuales.</p>
         </div>
       ) : (
         <div className="card overflow-hidden p-0">
@@ -405,7 +405,7 @@ export function HistoryPage() {
                         onClick={() => handleDownloadPDF(thread.id, thread.license_plate)}
                         disabled={downloading === thread.id}
                         className="text-xs text-primary-400 hover:text-primary-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                        title="Download PDF report"
+                        title="Descargar PDF"
                       >
                         {downloading === thread.id ? (
                           <>
@@ -413,7 +413,7 @@ export function HistoryPage() {
                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            Downloading...
+                            Descargando...
                           </>
                         ) : (
                           <>
@@ -427,9 +427,9 @@ export function HistoryPage() {
                       <button
                         onClick={() => handleDelete(thread.id, thread.license_plate)}
                         className="text-xs text-red-400 hover:text-red-300 transition-colors"
-                        title="Delete chat history"
+                        title="Eliminar sesión"
                       >
-                        Delete
+                        Eliminar
                       </button>
                     </div>
                   </td>

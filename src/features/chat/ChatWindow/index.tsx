@@ -1,7 +1,6 @@
 /** Chat window component - main chat interface */
 
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { ChatHeader } from "./ChatHeader";
 import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
@@ -19,7 +18,6 @@ interface ChatWindowProps {
 }
 
 export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
-  const { t } = useTranslation();
   const { currentWorkshop } = useWorkshopStore();
   const { canAccess } = usePermissions();
   const { showSuccess, showCritical } = useNotification();
@@ -43,12 +41,12 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
     if (!thread) return;
     try {
       await downloadChatThreadPDFFile(thread.id, thread.license_plate);
-      showSuccess(t("chat.errors.pdfDownloadedSuccessfully"), t("chat.errors.downloadComplete"));
+      showSuccess("PDF descargado exitosamente", "Descarga completa");
     } catch (error: any) {
       console.error("Failed to download PDF:", error);
       // Extract detailed error message
-      const errorMessage = error.message || error.response?.data?.detail || t("chat.errors.failedToDownloadPDF");
-      showCritical(errorMessage, t("chat.errors.downloadError"));
+      const errorMessage = error.message || error.response?.data?.detail || "No se pudo descargar el PDF. Por favor revisa los logs del servidor para más detalles.";
+      showCritical(errorMessage, "Error de descarga");
     }
   };
 
@@ -70,7 +68,7 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
         status={thread.status === "completed" ? "resolved" : (thread.status as "active" | "resolved" | "archived")}
         threadId={thread.id}
         createdAt={thread.created_at}
-        tokenUsage={tokenUsage}
+        tokenUsage={canAccess.viewTokenUsage ? tokenUsage : null}
         onStatusChange={updateThreadStatus}
         onDelete={deleteThread}
         onDownloadPDF={handleDownloadPDF}
@@ -110,7 +108,7 @@ export function ChatWindow({ thread, onCreateSession }: ChatWindowProps) {
           <button
             onClick={clearError}
             className="text-error-400 hover:text-error-300 transition-colors flex-shrink-0"
-            aria-label={t("common.dismiss")}
+            aria-label="Descartar"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

@@ -68,7 +68,7 @@ export interface AssignProviderRequest {
  * Fetch all global AI providers
  */
 export async function fetchAIProviders(): Promise<AIProvider[]> {
-  const response = await axiosClient.get('/ai-providers');
+  const response = await axiosClient.get('/api/v1/ai-providers');
   return response.data;
 }
 
@@ -76,7 +76,7 @@ export async function fetchAIProviders(): Promise<AIProvider[]> {
  * Fetch a single AI provider by ID
  */
 export async function getAIProvider(id: string): Promise<AIProvider> {
-  const response = await axiosClient.get(`/ai-providers/${id}`);
+  const response = await axiosClient.get(`/api/v1/ai-providers/${id}`);
   return response.data;
 }
 
@@ -84,7 +84,7 @@ export async function getAIProvider(id: string): Promise<AIProvider> {
  * Create a new AI provider (Superuser only)
  */
 export async function createAIProvider(data: CreateAIProviderRequest): Promise<AIProvider> {
-  const response = await axiosClient.post('/ai-providers', data);
+  const response = await axiosClient.post('/api/v1/ai-providers', data);
   return response.data;
 }
 
@@ -92,7 +92,7 @@ export async function createAIProvider(data: CreateAIProviderRequest): Promise<A
  * Update an existing AI provider (Superuser only)
  */
 export async function updateAIProvider(id: string, data: UpdateAIProviderRequest): Promise<AIProvider> {
-  const response = await axiosClient.patch(`/ai-providers/${id}`, data);
+  const response = await axiosClient.patch(`/api/v1/ai-providers/${id}`, data);
   return response.data;
 }
 
@@ -100,7 +100,7 @@ export async function updateAIProvider(id: string, data: UpdateAIProviderRequest
  * Delete an AI provider (Superuser only)
  */
 export async function deleteAIProvider(id: string): Promise<void> {
-  await axiosClient.delete(`/ai-providers/${id}`);
+  await axiosClient.delete(`/api/v1/ai-providers/${id}`);
 }
 
 // Workshop AI Providers (Workshop Admins)
@@ -109,7 +109,7 @@ export async function deleteAIProvider(id: string): Promise<void> {
  * Get all AI providers assigned to a workshop
  */
 export async function getWorkshopProviders(workshopId: string): Promise<WorkshopAIProvider[]> {
-  const response = await axiosClient.get(`/ai-providers/workshops/${workshopId}/providers`);
+  const response = await axiosClient.get(`/api/v1/ai-providers/workshops/${workshopId}/providers`);
   return response.data;
 }
 
@@ -120,7 +120,7 @@ export async function assignProviderToWorkshop(
   workshopId: string,
   data: AssignProviderRequest
 ): Promise<WorkshopAIProvider> {
-  const response = await axiosClient.post(`/ai-providers/workshops/${workshopId}/providers`, data);
+  const response = await axiosClient.post(`/api/v1/ai-providers/workshops/${workshopId}/providers`, data);
   return response.data;
 }
 
@@ -133,7 +133,7 @@ export async function updateWorkshopProvider(
   data: Partial<AssignProviderRequest>
 ): Promise<WorkshopAIProvider> {
   const response = await axiosClient.patch(
-    `/ai-providers/workshops/${workshopId}/providers/${providerId}`,
+    `/api/v1/ai-providers/workshops/${workshopId}/providers/${providerId}`,
     data
   );
   return response.data;
@@ -146,7 +146,7 @@ export async function removeProviderFromWorkshop(
   workshopId: string,
   providerId: string
 ): Promise<void> {
-  await axiosClient.delete(`/ai-providers/workshops/${workshopId}/providers/${providerId}`);
+  await axiosClient.delete(`/api/v1/ai-providers/workshops/${workshopId}/providers/${providerId}`);
 }
 
 /**

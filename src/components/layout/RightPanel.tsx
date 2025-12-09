@@ -18,7 +18,7 @@ export function RightPanel({ children, vehicleId }: RightPanelProps) {
       {/* Panel Header */}
       <div className="p-4 border-b border-industrial-800">
         <h2 className="text-sm font-semibold text-industrial-300 uppercase tracking-wider">
-          Information
+          Información
         </h2>
       </div>
 
@@ -28,7 +28,7 @@ export function RightPanel({ children, vehicleId }: RightPanelProps) {
         {currentWorkshop && (
           <div className="space-y-2">
             <h3 className="text-xs font-semibold text-industrial-400 uppercase">
-              Token Usage
+              Uso de tokens
             </h3>
             <TokenUsageDisplay workshopId={currentWorkshop.id} />
           </div>
@@ -38,7 +38,7 @@ export function RightPanel({ children, vehicleId }: RightPanelProps) {
         {vehicleId && (
           <div className="space-y-2">
             <h3 className="text-xs font-semibold text-industrial-400 uppercase">
-              Vehicle Details
+              Detalles del vehículo
             </h3>
             <VehicleDetailsPanel vehicleId={vehicleId} />
           </div>

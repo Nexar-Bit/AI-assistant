@@ -56,3 +56,35 @@ export async function getAllRegistrations(includeApproved = false): Promise<Pend
   );
   return response.data;
 }
+
+export interface TechnicianStats {
+  user_id: string;
+  username: string;
+  email: string;
+  consultations_count: number;
+  tokens_used: number;
+  vehicles_created: number;
+  last_activity?: string;
+}
+
+export interface WorkshopDetail {
+  workshop: WorkshopStats;
+  technicians: TechnicianStats[];
+}
+
+// Workshop Statistics
+export async function getWorkshopsStats(): Promise<WorkshopStats[]> {
+  const response = await axios.get(
+    `${API_BASE_URL}/api/v1/admin/workshops/stats`,
+    { withCredentials: true }
+  );
+  return response.data;
+}
+
+export async function getWorkshopDetail(workshopId: string): Promise<WorkshopDetail> {
+  const response = await axios.get(
+    `${API_BASE_URL}/api/v1/admin/workshops/${workshopId}/detail`,
+    { withCredentials: true }
+  );
+  return response.data;
+}

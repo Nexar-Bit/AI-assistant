@@ -1,7 +1,6 @@
 /** Notification component with different types and styles */
 
 import React from "react";
-import { useTranslation } from "react-i18next";
 
 export type NotificationType = "warning" | "critical" | "info" | "success";
 
@@ -92,7 +91,7 @@ export function Notification({
         <button
           onClick={onClose}
           className={`flex-shrink-0 p-1 rounded hover:bg-industrial-800/50 transition-colors ${config.textColor} opacity-70 hover:opacity-100`}
-          aria-label={t("settings.closeNotification")}
+          aria-label="Cerrar notificación"
         >
           <svg
             className="w-4 h-4"
