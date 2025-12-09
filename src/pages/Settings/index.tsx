@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { WorkshopCustomization } from "./WorkshopCustomization";
 import { WorkshopSettings } from "./WorkshopSettings";
+import { AIProvidersSettings } from "./AIProviders";
 import { useWorkshopStore } from "../../stores/workshop.store";
+import { usePermissions } from "../../hooks/usePermissions";
 import { getWorkshop } from "../../api/workshops";
 import { useNotification } from "../../components/layout/NotificationProvider";
 
 export function SettingsPage() {
   const { currentWorkshop, setCurrentWorkshop } = useWorkshopStore();
+  const { canAccess } = usePermissions();
   const { showCritical } = useNotification();
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"general" | "customization">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "customization" | "ai">("general");
 
   // Load fresh workshop data from database
   useEffect(() => {
@@ -111,6 +114,7 @@ export function SettingsPage() {
       {/* Tab Content */}
       {activeTab === "general" && <WorkshopSettings onUpdate={loadWorkshopData} />}
       {activeTab === "customization" && <WorkshopCustomization onUpdate={loadWorkshopData} />}
+      {activeTab === "ai" && <AIProvidersSettings />}
     </div>
   );
 }

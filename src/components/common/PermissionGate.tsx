@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { usePermissions } from "../../hooks/usePermissions";
 
 interface PermissionGateProps {
@@ -37,6 +38,7 @@ export function PermissionGate({
   showNothing = true,
   children,
 }: PermissionGateProps) {
+  const { t } = useTranslation();
   const { can, canAccess } = usePermissions();
 
   let hasPermission = true;
@@ -56,7 +58,7 @@ export function PermissionGate({
     }
     return (
       <div className="text-center py-8 text-industrial-400">
-        <p>You don't have permission to view this content.</p>
+        <p>{t("common.noPermission")}</p>
       </div>
     );
   }

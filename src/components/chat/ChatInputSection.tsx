@@ -1,6 +1,7 @@
 /** Chat input component with markdown support, quick actions, and real-time token counter */
 
 import React, { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { DiagnosticCode } from "../common/DiagnosticCode";
 
 interface ChatInputSectionProps {
@@ -26,18 +27,10 @@ function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
 
-const VEHICLE_TEMPLATE = `Vehicle Information:
-- License Plate: {license_plate}
-- Make/Model: {make} {model}
-- Year: {year}
-- Current KM: {current_km}
-
-Issue Description:`;
-
 export function ChatInputSection({
   onSend,
   disabled = false,
-  placeholder = "💬  Describe the issue or ask a question...",
+  placeholder: placeholderProp,
   estimatedTokens: externalEstimatedTokens,
   remainingTokens,
   tokenLimit = 10000,
@@ -45,12 +38,23 @@ export function ChatInputSection({
   onErrorCodesChange,
   vehicleData,
 }: ChatInputSectionProps) {
+  const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [showErrorCodeInput, setShowErrorCodeInput] = useState(false);
   const [errorCodeInput, setErrorCodeInput] = useState("");
   const [attachments, setAttachments] = useState<File[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const placeholder = placeholderProp || t("chat.input.placeholder");
+  
+  const VEHICLE_TEMPLATE = `${t("chat.vehicleTemplate.vehicleInformation")}
+- ${t("chat.vehicleTemplate.licensePlate")} {license_plate}
+- ${t("chat.vehicleTemplate.makeModel")} {make} {model}
+- ${t("chat.vehicleTemplate.year")} {year}
+- ${t("chat.vehicleTemplate.currentKm")} {current_km}
+
+${t("chat.vehicleTemplate.issueDescription")}`;
 
   // Calculate tokens from content (for display)
   const calculatedTokens = estimateTokens(content);
@@ -191,7 +195,7 @@ export function ChatInputSection({
           <button
             onClick={() => fileInputRef.current?.click()}
             className="touch-target p-2 hover:bg-industrial-800/50 rounded-lg transition-colors flex items-center justify-center"
-            title="Attach files/images"
+            title={t("common.attachFiles")}
             disabled={disabled}
           >
             <span className="text-lg">📎</span>
@@ -209,7 +213,7 @@ export function ChatInputSection({
           <button
             onClick={handleInsertVehicleTemplate}
             className="touch-target p-2 hover:bg-industrial-800/50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            title="Insert vehicle template"
+            title={t("common.insertVehicleTemplate")}
             disabled={disabled || !vehicleData}
           >
             <span className="text-lg">🚗</span>
@@ -219,7 +223,7 @@ export function ChatInputSection({
           <button
             onClick={handleInsertErrorCode}
             className="touch-target p-2 hover:bg-industrial-800/50 rounded-lg transition-colors flex items-center justify-center"
-            title="Insert error code"
+            title={t("common.insertErrorCode")}
             disabled={disabled}
           >
             <span className="text-lg">⚙️</span>
@@ -229,7 +233,7 @@ export function ChatInputSection({
           <button
             onClick={handleSaveAsTemplate}
             className="touch-target p-2 hover:bg-industrial-800/50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            title="Save as template"
+            title={t("common.saveAsTemplate")}
             disabled={disabled || !content.trim()}
           >
             <span className="text-lg">💾</span>
@@ -238,9 +242,10 @@ export function ChatInputSection({
 
         {/* Right: Token Counter & Send Button */}
         <div className="flex items-center gap-4">
-          {/* Token Counter */}
+          {/* Token Counter - Solo si se proporcionan los datos */}
+          {remainingTokens !== undefined && tokenLimit !== undefined && (
           <div className="text-sm font-mono text-industrial-400">
-            TOKENS:{" "}
+              {t("common.tokens")}{" "}
             <span
               className={
                 tokensRemaining < 1000
@@ -254,6 +259,7 @@ export function ChatInputSection({
             </span>
             /{tokenLimit.toLocaleString()}
           </div>
+          )}
 
           {/* Send Button */}
           <button
@@ -261,7 +267,7 @@ export function ChatInputSection({
             disabled={disabled || !content.trim()}
             className="touch-target px-6 py-2 bg-primary-600 hover:bg-primary-500 disabled:bg-industrial-700 disabled:text-industrial-500 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-medium"
           >
-            Send
+            {t("chat.input.send")}
           </button>
         </div>
       </div>
@@ -275,7 +281,7 @@ export function ChatInputSection({
                 type="text"
                 value={errorCodeInput}
                 onChange={(e) => setErrorCodeInput(e.target.value)}
-                placeholder="P0301, P0302, P0420..."
+                placeholder={t("chat.input.errorCodePlaceholder")}
                 className="flex-1 px-3 py-2 bg-industrial-900 border border-industrial-700 rounded-lg text-industrial-100 placeholder:text-industrial-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 text-sm"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -288,7 +294,7 @@ export function ChatInputSection({
                 onClick={handleAddErrorCode}
                 className="touch-target px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors text-sm font-medium"
               >
-                Add
+{t("chat.input.add")}
               </button>
               <button
                 onClick={() => {
@@ -297,11 +303,11 @@ export function ChatInputSection({
                 }}
                 className="touch-target px-4 py-2 bg-industrial-700 hover:bg-industrial-600 text-industrial-200 rounded-lg transition-colors text-sm"
               >
-                Cancel
+                 {t("chat.input.cancel")}
               </button>
             </div>
             <p className="text-xs text-industrial-500">
-              Enter diagnostic codes (e.g., P0301, P0302) separated by commas
+               {t("chat.input.enterDiagnosticCodes")}
             </p>
           </div>
         </div>
@@ -311,14 +317,14 @@ export function ChatInputSection({
       {errorCodes.length > 0 && (
         <div className="px-4 pb-3 border-t border-industrial-800">
           <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-industrial-400">Error Codes:</span>
+             <span className="text-xs text-industrial-400">{t("chat.input.errorCodesLabel")}</span>
             {errorCodes.map((code) => (
               <div key={code} className="flex items-center gap-1">
                 <DiagnosticCode code={code} variant="error" />
                 <button
                   onClick={() => handleRemoveErrorCode(code)}
                   className="text-industrial-500 hover:text-industrial-300 text-xs ml-1"
-                  title="Remove error code"
+                   title={t("chat.input.removeErrorCode")}
                 >
                   ×
                 </button>
@@ -332,7 +338,7 @@ export function ChatInputSection({
       {attachments.length > 0 && (
         <div className="px-4 pb-3 border-t border-industrial-800">
           <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-industrial-400">Attachments:</span>
+             <span className="text-xs text-industrial-400">{t("chat.input.attachmentsLabel")}</span>
             {attachments.map((file, index) => (
               <div
                 key={index}
@@ -347,7 +353,7 @@ export function ChatInputSection({
                 <button
                   onClick={() => handleRemoveAttachment(index)}
                   className="text-industrial-500 hover:text-industrial-300"
-                  title="Remove attachment"
+                   title={t("chat.input.removeAttachment")}
                 >
                   ×
                 </button>

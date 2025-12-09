@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { registerApi, verifyEmailApi, resendVerificationApi } from "../../api/auth";
 import { Button } from "../../components/common/Button";
@@ -6,6 +7,7 @@ import { Input } from "../../components/common/Input";
 import { useNotification } from "../../components/layout/NotificationProvider";
 
 export function SignupPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { showSuccess, showCritical, showInfo } = useNotification();
@@ -15,6 +17,7 @@ export function SignupPage() {
     email: "",
     password: "",
     confirmPassword: "",
+    registration_message: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,15 +40,15 @@ export function SignupPage() {
     setError(null);
     try {
       const result = await verifyEmailApi(token);
-      showSuccess(result.message, "Email Verified");
+      showSuccess(result.message, t("signup.emailVerified"));
       setTimeout(() => {
         navigate("/login");
       }, 2000);
     } catch (err: any) {
       console.error(err);
-      const errorMessage = err.response?.data?.detail || "Failed to verify email";
+      const errorMessage = err.response?.data?.detail || t("auth.signup.failedToVerifyEmail");
       setError(errorMessage);
-      showCritical(errorMessage, "Verification Failed");
+      showCritical(errorMessage, t("signup.verificationFailed"));
     } finally {
       setVerifying(false);
     }
@@ -58,12 +61,12 @@ export function SignupPage() {
     setError(null);
     try {
       await resendVerificationApi(registeredEmail);
-      showSuccess("Verification email sent. Please check your inbox.", "Email Sent");
+      showSuccess(t("auth.signup.verificationEmailSent"), t("signup.emailSent"));
     } catch (err: any) {
       console.error(err);
-      const errorMessage = err.response?.data?.detail || "Failed to resend verification email";
+      const errorMessage = err.response?.data?.detail || t("auth.signup.failedToResendEmail");
       setError(errorMessage);
-      showCritical(errorMessage, "Error");
+      showCritical(errorMessage, t("common.error"));
     } finally {
       setLoading(false);
     }
@@ -76,13 +79,13 @@ export function SignupPage() {
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("auth.signup.passwordsNotMatch"));
       setLoading(false);
       return;
     }
 
     if (formData.password.length < 12) {
-      setError("Password must be at least 12 characters long");
+      setError(t("auth.signup.passwordTooShort"));
       setLoading(false);
       return;
     }
@@ -92,16 +95,17 @@ export function SignupPage() {
         username: formData.username,
         email: formData.email,
         password: formData.password,
+        registration_message: formData.registration_message || undefined,
       });
       
       setRegistered(true);
       setRegisteredEmail(formData.email);
-      showSuccess(result.message, "Registration Successful");
+      showSuccess(result.message, t("auth.signup.registrationSuccess"));
     } catch (err: any) {
       console.error(err);
-      const errorMessage = err.response?.data?.detail || "Registration failed";
+      const errorMessage = err.response?.data?.detail || t("auth.signup.registrationFailed");
       setError(errorMessage);
-      showCritical(errorMessage, "Registration Failed");
+      showCritical(errorMessage, t("signup.registrationFailed"));
     } finally {
       setLoading(false);
     }
@@ -128,7 +132,7 @@ export function SignupPage() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-industrial-100">Verifying Email...</h2>
+              <h2 className="text-xl font-bold text-industrial-100">{t("signup.verifyingEmail")}</h2>
             </div>
           </div>
         </div>
@@ -156,15 +160,15 @@ export function SignupPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-industrial-100 mb-2">Registration Successful!</h2>
+              <h2 className="text-xl font-bold text-industrial-100 mb-2">{t("signup.registrationSuccessful")}</h2>
               <p className="text-sm text-industrial-400">
-                We've sent a verification link to <strong>{registeredEmail}</strong>
+                {t("signup.verificationLinkSent")} <strong>{registeredEmail}</strong>
               </p>
             </div>
             
             <div className="space-y-4">
               <div className="rounded-lg bg-primary-500/10 border border-primary-500/20 px-4 py-3 text-sm text-primary-300">
-                Please check your email and click the verification link to activate your account.
+                {t("signup.checkEmail")}
               </div>
               
               <div className="flex gap-3">
@@ -174,13 +178,13 @@ export function SignupPage() {
                   className="flex-1"
                   variant="secondary"
                 >
-                  {loading ? "Sending..." : "Resend Email"}
+                  {loading ? t("signup.sending") : t("signup.resendEmail")}
                 </Button>
                 <Button
                   onClick={() => navigate("/login")}
                   className="flex-1"
                 >
-                  Go to Login
+                  {t("signup.goToLogin")}
                 </Button>
               </div>
             </div>
@@ -220,17 +224,17 @@ export function SignupPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gradient-primary">
-                Create Account
+                {t("auth.signup.title")}
               </h1>
-              <p className="text-xs text-industrial-400">Join Vehicle Diagnostics AI</p>
+              <p className="text-xs text-industrial-400">{t("signup.joinPlatform")}</p>
             </div>
           </div>
           <p className="mb-6 text-sm text-industrial-300">
-            Sign up to start using the diagnostics platform
+            {t("signup.signUpToStart")}
           </p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="Username"
+              label={t("auth.signup.username")}
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               autoComplete="username"
@@ -238,10 +242,10 @@ export function SignupPage() {
               minLength={3}
               maxLength={50}
               pattern="[a-zA-Z0-9_-]+"
-              title="Username can only contain letters, numbers, underscores, and hyphens"
+              title={t("signup.usernameHelp")}
             />
             <Input
-              label="Email"
+              label={t("auth.signup.email")}
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -249,7 +253,7 @@ export function SignupPage() {
               required
             />
             <Input
-              label="Password"
+              label={t("auth.signup.password")}
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -258,10 +262,10 @@ export function SignupPage() {
               minLength={12}
             />
             <div className="text-xs text-industrial-500">
-              Password must be at least 12 characters with uppercase, lowercase, digit, and special character
+              {t("signup.passwordHelp")}
             </div>
             <Input
-              label="Confirm Password"
+              label={t("auth.signup.confirmPassword")}
               type="password"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
@@ -269,6 +273,27 @@ export function SignupPage() {
               required
               minLength={12}
             />
+            
+            <div>
+              <label className="block text-sm font-medium text-industrial-300 mb-2">
+                {t("auth.signup.messagePlaceholder")} {t("auth.signup.optional")}
+              </label>
+              <textarea
+                name="registration_message"
+                value={formData.registration_message}
+                onChange={(e) =>
+                  setFormData({ ...formData, registration_message: e.target.value })
+                }
+                maxLength={500}
+                rows={3}
+                className="w-full px-4 py-2 bg-industrial-800 border border-industrial-700 rounded-lg text-industrial-100 placeholder:text-industrial-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-colors"
+                placeholder={t("auth.signup.messageHint")}
+              />
+              <p className="text-xs text-industrial-500 mt-1">
+                {formData.registration_message.length}/500
+              </p>
+            </div>
+            
             {error && (
               <div className="rounded-lg bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm font-medium text-red-400 animate-slide-up">
                 {error}
@@ -285,16 +310,16 @@ export function SignupPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Creating account...
+                  {t("auth.signup.creatingAccount")}
                 </>
               ) : (
-                "Create Account"
+                t("auth.signup.createAccount")
               )}
             </Button>
             <div className="text-center text-sm text-industrial-400">
-              Already have an account?{" "}
+              {t("auth.signup.alreadyHaveAccount")}{" "}
               <Link to="/login" className="text-primary-400 hover:text-primary-300 font-medium">
-                Sign in
+                {t("auth.signup.signIn")}
               </Link>
             </div>
           </form>

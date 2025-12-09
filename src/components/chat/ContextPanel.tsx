@@ -1,6 +1,7 @@
 /** Context panel with vehicle details, session highlights, error codes, suggestions */
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { CarIcon, SpeedometerIcon, AlertIcon, WrenchIcon } from "../icons/AutomotiveIcons";
 import { DiagnosticCode } from "../common/DiagnosticCode";
 import { VehicleDetailsPanel } from "../vehicle/VehicleDetailsPanel";
@@ -22,19 +23,6 @@ interface ContextPanelProps {
   onSuggestedQuestionClick?: (question: string) => void;
 }
 
-const ERROR_CODE_EXPLANATIONS: Record<string, string> = {
-  P0301: "Cylinder 1 Misfire Detected",
-  P0302: "Cylinder 2 Misfire Detected",
-  P0303: "Cylinder 3 Misfire Detected",
-  P0304: "Cylinder 4 Misfire Detected",
-  P0420: "Catalyst System Efficiency Below Threshold",
-  P0171: "System Too Lean (Bank 1)",
-  P0172: "System Too Rich (Bank 1)",
-  P0401: "Exhaust Gas Recirculation Flow Insufficient",
-  P0442: "Evaporative Emission Control System Leak Detected (Small)",
-  P0455: "Evaporative Emission Control System Leak Detected (Large)",
-};
-
 export function ContextPanel({
   vehicleId,
   vehicleData,
@@ -43,6 +31,14 @@ export function ContextPanel({
   suggestedQuestions = [],
   onSuggestedQuestionClick,
 }: ContextPanelProps) {
+  const { t } = useTranslation();
+  
+  const getErrorCodeExplanation = (code: string): string => {
+    const key = `chat.errorCodes.${code}`;
+    const translation = t(key);
+    return translation !== key ? translation : "";
+  };
+  
   return (
     <div className="space-y-4">
       {/* Vehicle Details Summary */}
@@ -51,19 +47,19 @@ export function ContextPanel({
           <div className="flex items-center gap-2 mb-3">
             <CarIcon size={18} className="text-primary-400" />
             <h3 className="font-semibold text-industrial-200 text-sm">
-              Vehicle Summary
+              {t("chat.contextPanel.vehicleSummary")}
             </h3>
           </div>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-industrial-400">License:</span>
+              <span className="text-industrial-400">{t("chat.contextPanel.license")}</span>
               <span className="text-industrial-200 font-semibold">
                 {vehicleData.license_plate}
               </span>
             </div>
             {vehicleData.make && vehicleData.model && (
               <div className="flex justify-between">
-                <span className="text-industrial-400">Make/Model:</span>
+                <span className="text-industrial-400">{t("chat.contextPanel.makeModel")}</span>
                 <span className="text-industrial-200">
                   {vehicleData.make} {vehicleData.model}
                 </span>
@@ -73,7 +69,7 @@ export function ContextPanel({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <SpeedometerIcon size={14} className="text-industrial-500" />
-                  <span className="text-industrial-400">Current KM:</span>
+                  <span className="text-industrial-400">{t("chat.contextPanel.currentKm")}</span>
                 </div>
                 <span className="text-industrial-200 font-semibold">
                   {vehicleData.current_km.toLocaleString()} km
@@ -90,20 +86,23 @@ export function ContextPanel({
           <div className="flex items-center gap-2 mb-3">
             <AlertIcon size={18} className="text-warning-400" />
             <h3 className="font-semibold text-industrial-200 text-sm">
-              Error Codes
+              {t("chat.contextPanel.errorCodes")}
             </h3>
           </div>
           <div className="space-y-2">
-            {errorCodes.map((code) => (
-              <div key={code} className="space-y-1">
-                <DiagnosticCode code={code} variant="error" />
-                {ERROR_CODE_EXPLANATIONS[code] && (
-                  <p className="text-xs text-industrial-400 pl-2">
-                    {ERROR_CODE_EXPLANATIONS[code]}
-                  </p>
-                )}
-              </div>
-            ))}
+            {errorCodes.map((code) => {
+              const explanation = getErrorCodeExplanation(code);
+              return (
+                <div key={code} className="space-y-1">
+                  <DiagnosticCode code={code} variant="error" />
+                  {explanation && (
+                    <p className="text-xs text-industrial-400 pl-2">
+                      {explanation}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -114,7 +113,7 @@ export function ContextPanel({
           <div className="flex items-center gap-2 mb-3">
             <WrenchIcon size={18} className="text-primary-400" />
             <h3 className="font-semibold text-industrial-200 text-sm">
-              Session Highlights
+              {t("chat.contextPanel.sessionHighlights")}
             </h3>
           </div>
           <ul className="space-y-2 text-sm">
@@ -132,7 +131,7 @@ export function ContextPanel({
       {suggestedQuestions.length > 0 && (
         <div className="card-industrial">
           <h3 className="font-semibold text-industrial-200 text-sm mb-3">
-            Suggested Questions
+            {t("chat.contextPanel.suggestedQuestions")}
           </h3>
           <div className="space-y-2">
             {suggestedQuestions.map((question, idx) => (

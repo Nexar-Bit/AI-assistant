@@ -10,6 +10,7 @@ import { DashboardPage } from "./pages/Dashboard";
 import { ConsultationPage } from "./pages/Consultation";
 import { HistoryPage } from "./pages/History";
 import { AdminPage } from "./pages/Admin";
+import { RegistrationManagement } from "./pages/Admin/RegistrationManagement";
 import { ChatPage } from "./features/chat";
 import { VehiclesPage } from "./pages/Vehicles";
 import { TeamPage } from "./pages/Team";
@@ -74,6 +75,14 @@ function App() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AdminPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/registrations" 
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <RegistrationManagement />
                   </ProtectedRoute>
                 } 
               />

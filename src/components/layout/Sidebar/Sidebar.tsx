@@ -1,6 +1,7 @@
 /** Sidebar with modern vibrant design and latest icons */
 
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import { useWorkshopStore } from "../../../stores/workshop.store";
 import { PermissionGate } from "../../common/PermissionGate";
@@ -316,7 +317,7 @@ export function Sidebar() {
             setIsCollapsed(!isCollapsed);
           }}
           className="w-full flex items-center justify-center h-10 rounded-xl text-slate-400 hover:text-white hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 transition-all duration-300 hover:scale-105"
-          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={isCollapsed ? t("settings.expandSidebar") : t("settings.collapseSidebar")}
           type="button"
         >
           <svg

@@ -152,6 +152,14 @@ export function usePermissions() {
 
     // Create chat sessions - member or higher (viewers cannot create)
     createChatSession: hasWorkshopRoleAtLeast("member") && !hasWorkshopRole("viewer"),
+    
+    // Token management - SOLO admin/owner del taller
+    viewTokenUsage: can("admin"),
+    manageTokenLimits: can("owner"),
+    
+    // AI Providers
+    viewAIProviders: can("admin"),
+    manageAIProviders: can("admin"),
   };
 
   return {

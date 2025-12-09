@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { createPortal } from "react-dom";
 import { fetchWorkshops, createWorkshop } from "../../api/workshops";
 import { useWorkshopStore } from "../../stores/workshop.store";
@@ -8,6 +9,7 @@ import { Button } from "../common/Button";
 import { Input } from "../common/Input";
 
 export function WorkshopSelector() {
+  const { t } = useTranslation();
   const { currentWorkshop, workshops, setCurrentWorkshop, setWorkshops } =
     useWorkshopStore();
   const { showSuccess, showCritical } = useNotification();
@@ -102,7 +104,7 @@ export function WorkshopSelector() {
     return (
       <>
         <div className="glass rounded-lg p-4 animate-fade-in">
-          <div className="text-sm text-slate-400 mb-3">No workshops available</div>
+          <div className="text-sm text-slate-400 mb-3">{t("workshop.noWorkshopsAvailable")}</div>
           <p className="text-xs text-slate-500 mb-4">
             Create your first workshop to get started. You'll become the owner.
           </p>
@@ -168,7 +170,7 @@ export function WorkshopSelector() {
                   <textarea
                     value={createData.description}
                     onChange={(e) => setCreateData({ ...createData, description: e.target.value })}
-                    placeholder="Workshop description..."
+                    placeholder={t("common.workshopDescription")}
                     className="w-full px-4 py-2 bg-industrial-800 border border-industrial-700 rounded-lg text-industrial-100 placeholder:text-industrial-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
                     rows={3}
                   />

@@ -5,6 +5,7 @@ export interface RegisterRequest {
   username: string;
   email: string;
   password: string;
+  registration_message?: string;
 }
 
 export interface RegisterResponse {
@@ -12,6 +13,7 @@ export interface RegisterResponse {
   user_id: string;
   email: string;
   email_verification_required: boolean;
+  requires_approval?: boolean;
 }
 
 export interface VerifyEmailRequest {

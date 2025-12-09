@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { loginApi } from "../../api/auth";
 import { useAuthStore } from "../../stores/auth.store";
 import { Button } from "../../components/common/Button";
 import { Input } from "../../components/common/Input";
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const setTokens = useAuthStore((s) => s.setTokens);
   const [username, setUsername] = useState("");
@@ -23,7 +25,7 @@ export function LoginPage() {
       navigate("/");
     } catch (err) {
       console.error(err);
-      setError("Invalid credentials");
+      setError(t("auth.login.invalidCredentials"));
     } finally {
       setLoading(false);
     }
@@ -59,24 +61,24 @@ export function LoginPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gradient-primary">
-                Vehicle Diagnostics AI
+                {t("auth.login.title")}
               </h1>
-              <p className="text-xs text-industrial-400">Professional Platform</p>
+              <p className="text-xs text-industrial-400">Plataforma Profesional</p>
             </div>
           </div>
           <p className="mb-6 text-sm text-industrial-300">
-            Sign in to access the diagnostics console and start analyzing vehicle issues.
+            {t("auth.login.subtitle")}
           </p>
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input
-              label="Username"
+              label={t("auth.login.username")}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
               required
             />
             <Input
-              label="Password"
+              label={t("auth.login.password")}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -99,16 +101,16 @@ export function LoginPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Signing in...
+                  {t("auth.login.signingIn")}
                 </>
               ) : (
-                "Sign in"
+                t("auth.login.signIn")
               )}
             </Button>
             <div className="text-center text-sm text-industrial-400 mt-4">
-              Don't have an account?{" "}
+              {t("auth.login.noAccount")}{" "}
               <Link to="/signup" className="text-primary-400 hover:text-primary-300 font-medium">
-                Sign up
+                {t("auth.login.signUp")}
               </Link>
             </div>
           </form>
