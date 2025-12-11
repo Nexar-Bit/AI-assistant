@@ -85,24 +85,7 @@ function ChatPageContent() {
 
   return (
     <AutomotiveLayout
-      rightPanelContent={
-        <div className="space-y-4">
-          <UsageDashboard />
-          {currentThread && (
-            <ContextPanel
-              vehicleData={{
-                license_plate: currentThread.license_plate,
-                current_km: currentThread.vehicle_km,
-              }}
-              errorCodes={
-                currentThread.error_codes
-                  ? currentThread.error_codes.split(",").map((c) => c.trim())
-                  : []
-              }
-            />
-          )}
-        </div>
-      }
+      showRightPanel={false}
     >
       <div className="flex h-full flex-col">
         {/* Main Chat Area */}
@@ -124,8 +107,8 @@ function ChatPageContent() {
             </div>
           )}
 
-          {/* Chat Window - Full screen on mobile */}
-          <div className="flex-1 flex flex-col min-w-0 relative">
+          {/* Chat Window - Full screen on mobile, larger on desktop */}
+          <div className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
             {/* Mobile back button */}
             {currentThread && (
               <button

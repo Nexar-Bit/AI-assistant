@@ -129,10 +129,10 @@ export function ChatHeader({
 
   return (
     <div className="glass-strong border-b border-industrial-800">
-      {/* Compact Vehicle Info Bar */}
-      <div className="px-4 py-2.5 font-mono text-xs">
-        {/* First Row: Vehicle, Plate, KM */}
-        <div className="flex items-center gap-3 text-sm font-medium text-industrial-200 flex-wrap">
+      {/* Compact Vehicle Info Bar - More compact */}
+      <div className="px-4 py-2 font-mono text-xs">
+        {/* First Row: Vehicle, Plate, KM - More compact */}
+        <div className="flex items-center gap-2.5 text-xs font-medium text-industrial-200 flex-wrap">
           {/* Vehicle */}
           <div className="flex items-center gap-1.5">
             <CarIcon size={14} className="text-primary-400 flex-shrink-0" />
@@ -167,8 +167,8 @@ export function ChatHeader({
           )}
         </div>
 
-        {/* Second Row: Engine, Status, Duration */}
-        <div className="flex items-center gap-3 text-sm font-medium text-industrial-200 mt-1.5 flex-wrap">
+        {/* Second Row: Engine, Status, Duration - More compact */}
+        <div className="flex items-center gap-2.5 text-xs font-medium text-industrial-200 mt-1 flex-wrap">
           {/* Engine */}
           {engineType && (
             <>

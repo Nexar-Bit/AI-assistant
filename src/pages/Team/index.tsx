@@ -371,8 +371,14 @@ export function TeamPage() {
                   required
                 />
                 <p className="text-xs text-industrial-500 mt-1">
-                  El usuario debe tener una cuenta existente
+                  El usuario debe tener una cuenta existente. Si no existe, debe registrarse primero o ser creado por un administrador de plataforma.
                 </p>
+                <div className="mt-2 p-3 bg-primary-500/10 border border-primary-500/20 rounded-lg">
+                  <p className="text-xs text-primary-300 font-medium mb-1">💡 ¿No sabes cómo crear técnicos?</p>
+                  <p className="text-xs text-primary-400">
+                    Consulta el manual en <code className="text-primary-300">MANUAL_CREACION_TECNICOS.md</code> o contacta al administrador de plataforma.
+                  </p>
+                </div>
               </div>
 
               <div>

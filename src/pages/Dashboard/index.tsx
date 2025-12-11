@@ -4,6 +4,7 @@ import { getDashboardStats } from "../../api/chat";
 import { useWorkshopStore } from "../../stores/workshop.store";
 import { usePermissions } from "../../hooks/usePermissions";
 import { ViewerDashboard } from "./ViewerDashboard";
+import { UsageDashboard } from "../../features/tokens/UsageDashboard";
 import type { DashboardStats } from "../../api/chat";
 
 export function DashboardPage() {
@@ -144,6 +145,14 @@ export function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Token Usage Dashboard - Only visible to admins/owners */}
+            {canAccess.viewTokenUsage && (
+              <div className="card">
+                <h2 className="text-lg font-semibold text-industrial-100 mb-4">Uso de Tokens</h2>
+                <UsageDashboard />
+              </div>
+            )}
+            
             <div className="card">
               <h2 className="text-lg font-semibold text-industrial-100 mb-4">Actividad reciente</h2>
               {stats && stats.recent_activity.length > 0 ? (

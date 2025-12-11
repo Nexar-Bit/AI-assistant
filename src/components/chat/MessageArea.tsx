@@ -48,7 +48,12 @@ export function MessageArea({
   return (
     <div
       ref={containerRef}
-      className="flex-1 overflow-y-auto p-6 space-y-4 bg-industrial-950"
+      className="flex-1 overflow-y-auto p-8 space-y-6 bg-industrial-950"
+      style={{ 
+        maxWidth: '100%',
+        fontSize: '15px',
+        lineHeight: '1.6'
+      }}
     >
       {messages.map((message) => (
         <ChatMessageBubble key={message.id} message={message} />

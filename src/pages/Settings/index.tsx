@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { WorkshopCustomization } from "./WorkshopCustomization";
 import { WorkshopSettings } from "./WorkshopSettings";
 import { AIProvidersSettings } from "./AIProviders";
+import { WorkshopPromptsSettings } from "./Prompts";
 import { useWorkshopStore } from "../../stores/workshop.store";
 import { usePermissions } from "../../hooks/usePermissions";
 import { getWorkshop } from "../../api/workshops";
@@ -12,7 +13,7 @@ export function SettingsPage() {
   const { canAccess, isAdmin } = usePermissions();
   const { showCritical } = useNotification();
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"general" | "customization" | "ai">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "customization" | "ai" | "prompts">("general");
 
   // Load fresh workshop data from database
   useEffect(() => {
@@ -120,6 +121,18 @@ export function SettingsPage() {
               Proveedores de IA
             </button>
           )}
+          {canAccess.updateWorkshopSettings && (
+            <button
+              onClick={() => setActiveTab("prompts")}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === "prompts"
+                  ? "text-primary-400 border-b-2 border-primary-400"
+                  : "text-industrial-400 hover:text-industrial-200"
+              }`}
+            >
+              Prompts de IA
+            </button>
+          )}
         </nav>
       </div>
 
@@ -127,6 +140,7 @@ export function SettingsPage() {
       {activeTab === "general" && <WorkshopSettings onUpdate={loadWorkshopData} />}
       {activeTab === "customization" && <WorkshopCustomization onUpdate={loadWorkshopData} />}
       {activeTab === "ai" && <AIProvidersSettings />}
+      {activeTab === "prompts" && <WorkshopPromptsSettings />}
     </div>
   );
 }

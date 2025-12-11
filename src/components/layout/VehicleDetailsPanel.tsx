@@ -28,26 +28,20 @@ export function ExpandableVehicleDetailsPanel({
   return (
     <div
       className={`bg-[#111827] border-t border-industrial-800 transition-all duration-300 ${
-        isExpanded ? "h-96" : "h-12"
-      } flex flex-col`}
+        isExpanded ? "h-96" : "h-10"
+      } flex flex-col flex-shrink-0`}
     >
-      {/* Header - Always visible */}
+      {/* Header - Always visible - More compact */}
       <div
-        className="flex items-center justify-between px-6 py-3 cursor-pointer hover:bg-industrial-800/30 transition-colors"
+        className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-industrial-800/30 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-3">
-          <span className="text-lg">🚗</span>
-          <div>
-            <h3 className="text-sm font-semibold text-industrial-200">
-              Vehicle Details
-            </h3>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-base">🚗</span>
+          <div className="min-w-0 flex-1">
             {vehicleData?.license_plate && (
-              <p className="text-xs text-industrial-400">
+              <p className="text-xs font-mono text-industrial-300 truncate">
                 {vehicleData.license_plate}
-                {vehicleData.make && vehicleData.model
-                  ? ` • ${vehicleData.make} ${vehicleData.model}`
-                  : ""}
               </p>
             )}
           </div>

@@ -93,8 +93,9 @@ export function usePermissions() {
     dashboard: true,
 
     // Chat - member or higher (viewers cannot access chat)
+    // Platform admins (global admin role) CANNOT access chat - they are management only
     // Members can view and participate, technicians+ can do everything
-    chat: hasWorkshopRoleAtLeast("member") && !hasWorkshopRole("viewer"),
+    chat: !hasGlobalRole("admin") && hasWorkshopRoleAtLeast("member") && !hasWorkshopRole("viewer"),
 
     // Vehicles - technician or higher (members and viewers can only view)
     vehicles: hasWorkshopRoleAtLeast("member"), // All can view, but create/edit requires technician+
@@ -148,10 +149,12 @@ export function usePermissions() {
     viewReports: hasWorkshopRoleAtLeast("viewer"),
 
     // Send messages in chat - member or higher (viewers cannot send)
-    sendChatMessage: hasWorkshopRoleAtLeast("member") && !hasWorkshopRole("viewer"),
+    // Platform admins cannot send messages
+    sendChatMessage: !hasGlobalRole("admin") && hasWorkshopRoleAtLeast("member") && !hasWorkshopRole("viewer"),
 
     // Create chat sessions - member or higher (viewers cannot create)
-    createChatSession: hasWorkshopRoleAtLeast("member") && !hasWorkshopRole("viewer"),
+    // Platform admins cannot create sessions
+    createChatSession: !hasGlobalRole("admin") && hasWorkshopRoleAtLeast("member") && !hasWorkshopRole("viewer"),
     
     // Token management - SOLO admin/owner del taller
     viewTokenUsage: can("admin"),
