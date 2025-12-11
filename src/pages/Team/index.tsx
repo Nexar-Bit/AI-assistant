@@ -375,9 +375,13 @@ export function TeamPage() {
                 </p>
                 <div className="mt-2 p-3 bg-primary-500/10 border border-primary-500/20 rounded-lg">
                   <p className="text-xs text-primary-300 font-medium mb-1">💡 ¿No sabes cómo crear técnicos?</p>
-                  <p className="text-xs text-primary-400">
-                    Consulta el manual en <code className="text-primary-300">MANUAL_CREACION_TECNICOS.md</code> o contacta al administrador de plataforma.
+                  <p className="text-xs text-primary-400 mb-2">
+                    Consulta la guía completa en <code className="text-primary-300">GUIA_CREAR_TECNICO.md</code>
                   </p>
+                  <div className="text-xs text-primary-400 space-y-1">
+                    <p><strong>Método 1:</strong> El usuario se registra → Tú lo apruebas → Lo agregas aquí</p>
+                    <p><strong>Método 2:</strong> Administrador de plataforma lo crea directamente → Lo agregas aquí</p>
+                  </div>
                 </div>
               </div>
 
