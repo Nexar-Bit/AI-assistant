@@ -113,6 +113,35 @@ export async function removeMember(
   await axiosClient.delete(`/api/v1/workshops/${workshopId}/members/${userId}`);
 }
 
+export interface CreateWorkshopUserRequest {
+  username: string;
+  email: string;
+  password: string;
+  role: "admin" | "technician" | "member" | "viewer";
+  is_active?: boolean;
+}
+
+export interface CreateWorkshopUserResponse {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  is_active: boolean;
+  workshop_role: string;
+  workshop_id: string;
+}
+
+export async function createWorkshopUser(
+  workshopId: string,
+  data: CreateWorkshopUserRequest
+): Promise<CreateWorkshopUserResponse> {
+  const { data: response } = await axiosClient.post<CreateWorkshopUserResponse>(
+    `/api/v1/workshops/${workshopId}/users`,
+    data
+  );
+  return response;
+}
+
 export interface MyWorkshopRole {
   workshop_id: string;
   user_id: string;

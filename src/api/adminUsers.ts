@@ -19,6 +19,9 @@ export interface CreateUserAdminRequest {
   role?: "owner" | "admin" | "technician" | "viewer" | "member";
   is_active?: boolean;
   registration_approved?: boolean;
+  // Optional: assign to workshop (platform owners can assign to any workshop)
+  workshop_id?: string;
+  workshop_role?: "owner" | "admin" | "technician" | "member" | "viewer";
 }
 
 export interface UpdateUserAdminRequest {

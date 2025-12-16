@@ -69,6 +69,7 @@ export function TopBar() {
   
   // Only global owners are considered platform admins
   const isPlatformAdmin = user?.role === "owner";
+  const canCreateWorkshop = user?.role === "owner";
   const [showWorkshopMenu, setShowWorkshopMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -194,16 +195,22 @@ export function TopBar() {
                     <div className="text-sm text-industrial-400 text-center">
                       No workshops available
                     </div>
-                    <button
-                      onClick={() => {
-                        setShowWorkshopMenu(false);
-                        setShowCreateModal(true);
-                      }}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-500/20 to-accent-500/20 hover:from-primary-500/30 hover:to-accent-500/30 text-primary-400 hover:text-primary-300 border border-primary-500/30 transition-all duration-300 text-sm font-medium"
-                    >
-                      <BuildingIcon className="w-4 h-4" />
-                      Create Workshop
-                    </button>
+                    canCreateWorkshop ? (
+                      <button
+                        onClick={() => {
+                          setShowWorkshopMenu(false);
+                          setShowCreateModal(true);
+                        }}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-500/20 to-accent-500/20 hover:from-primary-500/30 hover:to-accent-500/30 text-primary-400 hover:text-primary-300 border border-primary-500/30 transition-all duration-300 text-sm font-medium"
+                      >
+                        <BuildingIcon className="w-4 h-4" />
+                        Create Workshop
+                      </button>
+                    ) : (
+                      <div className="text-slate-400 text-sm text-center px-4">
+                        No workshops available. Contact platform administrator.
+                      </div>
+                    )
                   </div>
                 ) : (
                   workshops.map((workshop) => (
@@ -242,20 +249,22 @@ export function TopBar() {
                     </button>
                   ))
                 )}
-                <div className="border-t border-slate-700/50 mt-1 pt-1">
-                  <button
-                    onClick={() => {
-                      setShowWorkshopMenu(false);
-                      setShowCreateModal(true);
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-primary-300 transition-all duration-300"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span className="font-medium">Create New Workshop</span>
-                  </button>
-                </div>
+                {canCreateWorkshop && (
+                  <div className="border-t border-slate-700/50 mt-1 pt-1">
+                    <button
+                      onClick={() => {
+                        setShowWorkshopMenu(false);
+                        setShowCreateModal(true);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-sm text-slate-300 hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-accent-500/20 hover:text-primary-300 transition-all duration-300"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      <span className="font-medium">Create New Workshop</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}

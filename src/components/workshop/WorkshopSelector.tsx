@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { fetchWorkshops, createWorkshop } from "../../api/workshops";
 import { useWorkshopStore } from "../../stores/workshop.store";
 import { useNotification } from "../../components/layout/NotificationProvider";
+import { usePermissions } from "../../hooks/usePermissions";
 import type { Workshop } from "../../types/workshop.types";
 import { Button } from "../common/Button";
 import { Input } from "../common/Input";
@@ -11,6 +12,7 @@ export function WorkshopSelector() {
   const { currentWorkshop, workshops, setCurrentWorkshop, setWorkshops } =
     useWorkshopStore();
   const { showSuccess, showCritical } = useNotification();
+  const { canAccess } = usePermissions();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -99,6 +101,17 @@ export function WorkshopSelector() {
   };
 
   if (workshops.length === 0) {
+    if (!canAccess.createWorkshop) {
+      return (
+        <div className="glass rounded-lg p-4 animate-fade-in">
+          <div className="text-sm text-slate-400 mb-3">No hay talleres disponibles</div>
+          <p className="text-xs text-slate-500 mb-4">
+            Contacta a un administrador de la plataforma para crear un taller.
+          </p>
+        </div>
+      );
+    }
+    
     return (
       <>
         <div className="glass rounded-lg p-4 animate-fade-in">

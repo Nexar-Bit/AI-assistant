@@ -30,7 +30,7 @@ export function usePermissions() {
   /**
    * Check if user has a specific global role
    */
-  const hasGlobalRole = (role: "admin" | "technician" | "viewer"): boolean => {
+  const hasGlobalRole = (role: "owner" | "admin" | "technician" | "viewer"): boolean => {
     if (!user) return false;
     return user.role === role;
   };
@@ -109,8 +109,11 @@ export function usePermissions() {
     // Settings - admin or owner only
     settings: can("admin"),
 
-    // Admin panel - global admin only
-    admin: hasGlobalRole("admin"),
+    // Admin panel - global owner only
+    admin: hasGlobalRole("owner"),
+    
+    // Create workshop - platform owner only
+    createWorkshop: hasGlobalRole("owner"),
 
     // Create vehicles - technician or higher (members cannot create)
     createVehicle: can("technician"),
@@ -176,7 +179,8 @@ export function usePermissions() {
     hasWorkshopRoleAtLeast,
     can,
     canAccess,
-    isAdmin: hasGlobalRole("admin"),
+    isPlatformOwner: hasGlobalRole("owner"),
+    isAdmin: hasGlobalRole("admin") || hasGlobalRole("owner"),
     isWorkshopAdmin: hasWorkshopRoleAtLeast("admin"),
     isWorkshopOwner: hasWorkshopRole("owner"),
   };
