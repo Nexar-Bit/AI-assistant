@@ -12,18 +12,7 @@ export interface RegisterResponse {
   message: string;
   user_id: string;
   email: string;
-  email_verification_required: boolean;
   requires_approval?: boolean;
-}
-
-export interface VerifyEmailRequest {
-  token: string;
-}
-
-export interface VerifyEmailResponse {
-  message: string;
-  user_id: string;
-  email: string;
 }
 
 export async function loginApi(payload: LoginRequest): Promise<LoginResponse> {
@@ -50,21 +39,3 @@ export async function registerApi(payload: RegisterRequest): Promise<RegisterRes
   );
   return data;
 }
-
-export async function verifyEmailApi(token: string): Promise<VerifyEmailResponse> {
-  const { data } = await axiosClient.post<VerifyEmailResponse>(
-    "/api/v1/auth/verify-email",
-    { token },
-  );
-  return data;
-}
-
-export async function resendVerificationApi(email: string): Promise<{ message: string }> {
-  const { data } = await axiosClient.post<{ message: string }>(
-    "/api/v1/auth/resend-verification",
-    { email },
-  );
-  return data;
-}
-
-

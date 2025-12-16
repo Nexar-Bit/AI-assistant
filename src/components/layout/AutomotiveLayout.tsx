@@ -17,7 +17,7 @@ export function AutomotiveLayout({
   return (
     <div className="flex h-full overflow-hidden bg-industrial-950">
       {/* Center: Chat Interface (Primary Workspace) */}
-      <main className="flex-1 overflow-hidden bg-industrial-950 min-w-0">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden bg-industrial-950 min-w-0">
         {children}
       </main>
 

@@ -45,28 +45,28 @@ export function useNotifications() {
   // Convenience methods
   const showWarning = useCallback(
     (message: string, title?: string) => {
-      return addNotification("warning", message, { title });
+      return addNotification("warning", message, { title, autoClose: true, duration: 5000 });
     },
     [addNotification]
   );
 
   const showCritical = useCallback(
     (message: string, title?: string) => {
-      return addNotification("critical", message, { title, autoClose: false });
+      return addNotification("critical", message, { title, autoClose: true, duration: 7000 });
     },
     [addNotification]
   );
 
   const showInfo = useCallback(
     (message: string, title?: string) => {
-      return addNotification("info", message, { title });
+      return addNotification("info", message, { title, autoClose: true, duration: 4000 });
     },
     [addNotification]
   );
 
   const showSuccess = useCallback(
     (message: string, title?: string) => {
-      return addNotification("success", message, { title });
+      return addNotification("success", message, { title, autoClose: true, duration: 3000 });
     },
     [addNotification]
   );

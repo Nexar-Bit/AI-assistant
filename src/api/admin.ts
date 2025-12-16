@@ -2,9 +2,7 @@
  * Admin API - For superuser administration
  */
 
-import axios from 'axios';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import axiosClient from './axiosClient';
 
 export interface PendingRegistration {
   id: string;
@@ -12,7 +10,6 @@ export interface PendingRegistration {
   email: string;
   registration_message?: string;
   registration_approved: boolean;
-  email_verified: boolean;
   is_active: boolean;
   role: string;
   created_at: string;
@@ -30,30 +27,31 @@ export interface WorkshopStats {
 
 // Registration Management
 export async function getPendingRegistrations(): Promise<PendingRegistration[]> {
-  const response = await axios.get(
-    `${API_BASE_URL}/api/v1/admin/registrations/pending`,
-    { withCredentials: true }
-  );
+  const response = await axiosClient.get('/api/v1/admin/registrations/pending');
   return response.data;
 }
 
-export async function approveRegistration(userId: string, approved: boolean): Promise<{message: string}> {
-  const response = await axios.post(
-    `${API_BASE_URL}/api/v1/admin/registrations/${userId}/approve`,
-    { approved },
-    { withCredentials: true }
+export interface ApproveRegistrationRequest {
+  approved: boolean;
+  workshop_id?: string;
+  workshop_role?: string;
+}
+
+export async function approveRegistration(
+  userId: string,
+  data: ApproveRegistrationRequest
+): Promise<{message: string; user_id: string; workshop_assigned?: boolean; workshop_id?: string}> {
+  const response = await axiosClient.post(
+    `/api/v1/admin/registrations/${userId}/approve`,
+    data
   );
   return response.data;
 }
 
 export async function getAllRegistrations(includeApproved = false): Promise<PendingRegistration[]> {
-  const response = await axios.get(
-    `${API_BASE_URL}/api/v1/admin/registrations`,
-    {
-      params: { include_approved: includeApproved },
-      withCredentials: true,
-    }
-  );
+  const response = await axiosClient.get('/api/v1/admin/registrations', {
+    params: { include_approved: includeApproved },
+  });
   return response.data;
 }
 
@@ -74,17 +72,11 @@ export interface WorkshopDetail {
 
 // Workshop Statistics
 export async function getWorkshopsStats(): Promise<WorkshopStats[]> {
-  const response = await axios.get(
-    `${API_BASE_URL}/api/v1/admin/workshops/stats`,
-    { withCredentials: true }
-  );
+  const response = await axiosClient.get('/api/v1/admin/workshops/stats');
   return response.data;
 }
 
 export async function getWorkshopDetail(workshopId: string): Promise<WorkshopDetail> {
-  const response = await axios.get(
-    `${API_BASE_URL}/api/v1/admin/workshops/${workshopId}/detail`,
-    { withCredentials: true }
-  );
+  const response = await axiosClient.get(`/api/v1/admin/workshops/${workshopId}/detail`);
   return response.data;
 }

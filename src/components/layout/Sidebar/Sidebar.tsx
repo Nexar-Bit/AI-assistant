@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useWorkshopStore } from "../../../stores/workshop.store";
+import { useAuthStore } from "../../../stores/auth.store";
 import { PermissionGate } from "../../common/PermissionGate";
 // Modern icon components (inline SVGs - latest design)
 const HomeIcon = ({ className = "", size = 24 }: { className?: string; size?: number }) => (
@@ -60,6 +61,13 @@ const SparklesIcon = ({ className = "", size = 24 }: { className?: string; size?
   </svg>
 );
 
+const ShieldIcon = ({ className = "", size = 24 }: { className?: string; size?: number }) => (
+  <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <path d="m9 12 2 2 4-4" />
+  </svg>
+);
+
 // Navigation items
 const navItems = [
   {
@@ -108,12 +116,15 @@ const navItems = [
 
 export function Sidebar() {
   const { currentWorkshop } = useWorkshopStore();
+  const { user } = useAuthStore();
   // Track if user manually toggled (to prevent auto-resize from overriding)
   const [userToggled, setUserToggled] = useState(false);
   // On tablet (768px-1024px), start collapsed. On desktop (>1024px), start expanded
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hoverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  
+  const isPlatformAdmin = user?.role === "admin";
 
   // Auto-collapse on tablet on mount (only if user hasn't manually toggled)
   useEffect(() => {
@@ -217,6 +228,57 @@ export function Sidebar() {
 
       {/* Navigation - Modern Vibrant Design */}
       <nav className="flex-1 py-4 space-y-2 px-2">
+        {/* Platform Admin Link - Only for admin users */}
+        {isPlatformAdmin && (
+          <div className="relative group mb-4">
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `relative flex items-center ${isCollapsed ? "justify-center" : "justify-start gap-3 px-3"} w-full h-14 rounded-xl transition-all duration-300 ${
+                  isActive
+                    ? "bg-gradient-to-r from-warning-500 to-error-500 text-white shadow-lg shadow-warning-500/50 scale-105"
+                    : "text-slate-400 hover:text-white hover:bg-slate-700/50 hover:scale-105"
+                }`
+              }
+            >
+              <div className={`flex items-center ${isCollapsed ? "justify-center" : ""} ${isCollapsed ? "w-full" : "flex-shrink-0"}`}>
+                <ShieldIcon className="w-6 h-6" />
+              </div>
+              {!isCollapsed && (
+                <span className="text-sm font-medium truncate">
+                  Admin Panel
+                </span>
+              )}
+            </NavLink>
+            {isCollapsed && hoveredItem === "/admin" && (
+              <div 
+                className="absolute left-full top-0 bottom-0 w-48 z-50"
+                onMouseEnter={() => {
+                  if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                    hoverTimeoutRef.current = null;
+                  }
+                  setHoveredItem("/admin");
+                }}
+                onMouseLeave={() => {
+                  hoverTimeoutRef.current = setTimeout(() => {
+                    setHoveredItem(null);
+                  }, 100);
+                }}
+              >
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 animate-slide-up pointer-events-auto">
+                  <div className="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 shadow-2xl whitespace-nowrap backdrop-blur-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-white">Admin Panel</span>
+                    </div>
+                  </div>
+                  <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-r-4 border-r-slate-800 border-t-4 border-t-transparent border-b-4 border-b-transparent" />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        
         {navItems.map((item) => {
           const IconComponent = item.icon;
           return (

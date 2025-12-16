@@ -55,19 +55,42 @@ export function Notification({
   duration = 5000,
 }: NotificationProps) {
   const config = notificationConfig[type];
+  const [progress, setProgress] = React.useState(100);
+  const [isClosing, setIsClosing] = React.useState(false);
 
   React.useEffect(() => {
     if (autoClose && onClose) {
       const timer = setTimeout(() => {
-        onClose();
+        setIsClosing(true);
+        // Give time for fade-out animation
+        setTimeout(onClose, 300);
       }, duration);
-      return () => clearTimeout(timer);
+
+      // Update progress bar
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          const decrement = (100 / duration) * 50; // Update every 50ms
+          return Math.max(0, prev - decrement);
+        });
+      }, 50);
+
+      return () => {
+        clearTimeout(timer);
+        clearInterval(interval);
+      };
     }
   }, [autoClose, duration, onClose]);
 
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => onClose?.(), 300);
+  };
+
   return (
     <div
-      className={`flex items-start gap-3 p-4 rounded-lg border ${config.bgColor} ${config.borderColor} ${className} animate-slide-up`}
+      className={`relative flex items-start gap-3 p-4 rounded-lg border ${config.bgColor} ${config.borderColor} ${className} overflow-hidden transition-all duration-300 ${
+        isClosing ? 'opacity-0 translate-x-full' : 'animate-slide-up'
+      }`}
     >
       {/* Icon */}
       <div className={`w-8 h-8 rounded-full ${config.iconBg} flex items-center justify-center flex-shrink-0`}>
@@ -89,7 +112,7 @@ export function Notification({
       {/* Close Button */}
       {onClose && (
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className={`flex-shrink-0 p-1 rounded hover:bg-industrial-800/50 transition-colors ${config.textColor} opacity-70 hover:opacity-100`}
           aria-label="Cerrar notificación"
         >
@@ -107,6 +130,16 @@ export function Notification({
             />
           </svg>
         </button>
+      )}
+
+      {/* Progress Bar */}
+      {autoClose && (
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-industrial-800/30">
+          <div
+            className={`h-full transition-all ease-linear ${config.textColor.replace('text-', 'bg-')}`}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       )}
     </div>
   );

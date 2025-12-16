@@ -20,10 +20,17 @@ export function LoginPage() {
     try {
       const res = await loginApi({ username, password });
       setTokens(res);
-      navigate("/");
-    } catch (err) {
-      console.error(err);
-      setError("Credenciales inválidas");
+      
+      // Redirect based on user role
+      if (res.user?.role === 'admin') {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (err: any) {
+      console.error("Login error:", err);
+      const errorMessage = err.response?.data?.detail || "Credenciales inválidas o cuenta no activada";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

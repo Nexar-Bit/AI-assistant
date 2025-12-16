@@ -5,7 +5,6 @@ import { NotificationProvider } from "./components/layout/NotificationProvider";
 import { AppLayout } from "./components/layout/AppLayout";
 import { LoginPage } from "./pages/Login";
 import { SignupPage } from "./pages/Signup";
-import { VerifyEmailPage } from "./pages/VerifyEmail";
 import { DashboardPage } from "./pages/Dashboard";
 import { ConsultationPage } from "./pages/Consultation";
 import { HistoryPage } from "./pages/History";
@@ -43,8 +42,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
-            
+
             {/* Protected Routes with AppLayout */}
             <Route
               element={

@@ -28,7 +28,6 @@ export function UsersManagement() {
     password: "",
     role: "technician",
     is_active: true,
-    email_verified: true,
   });
   const [passwordReset, setPasswordReset] = useState({
     new_password: "",
@@ -70,7 +69,6 @@ export function UsersManagement() {
         password: "",
         role: "technician",
         is_active: true,
-        email_verified: true,
       });
       loadUsers();
     } catch (err: any) {
@@ -111,7 +109,6 @@ export function UsersManagement() {
         password: "",
         role: "technician",
         is_active: true,
-        email_verified: true,
       });
       loadUsers();
     } catch (err: any) {
@@ -243,8 +240,9 @@ export function UsersManagement() {
       </div>
 
       {/* Users Table */}
-      <div className="card overflow-hidden p-0">
-        <table className="w-full">
+      <div className="card p-0">
+        <div className="max-h-[600px] overflow-y-auto">
+          <table className="w-full">
           <thead className="bg-industrial-800/50 border-b border-industrial-700/50">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-industrial-400">
@@ -320,7 +318,7 @@ export function UsersManagement() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-industrial-300">
-                    {user.daily_token_limit.toLocaleString()}
+                    {user.daily_token_limit?.toLocaleString() ?? '10,000'}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
@@ -349,6 +347,7 @@ export function UsersManagement() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Create/Edit Modal */}

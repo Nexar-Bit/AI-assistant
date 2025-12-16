@@ -17,7 +17,7 @@ export function AppLayout() {
         </div>
         
         {/* Primary Workspace */}
-        <main className="flex-1 overflow-hidden min-h-0 pb-16 md:pb-0">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 pb-16 md:pb-0">
           <Outlet />
         </main>
       </div>

@@ -63,9 +63,11 @@ const SparklesIcon = ({ className = "", size = 20 }: { className?: string; size?
 
 export function TopBar() {
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const { currentWorkshop, workshops, setCurrentWorkshop, setWorkshops } = useWorkshopStore();
   const { showSuccess, showCritical } = useNotification();
+  
+  const isPlatformAdmin = user?.role === "admin";
   const [showWorkshopMenu, setShowWorkshopMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -385,9 +387,31 @@ export function TopBar() {
             <div className="absolute top-full right-0 mt-2 w-56 bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-600/50 rounded-2xl shadow-2xl z-50 backdrop-blur-xl">
               <div className="p-2 space-y-1">
                 <div className="px-4 py-3 border-b border-slate-700/50">
-                  <p className="text-sm font-bold text-white">User Account</p>
-                  <p className="text-xs text-slate-400">user@example.com</p>
+                  <p className="text-sm font-bold text-white">
+                    {user?.username || "User Account"}
+                  </p>
+                  <p className="text-xs text-slate-400">{user?.email || "user@example.com"}</p>
+                  {isPlatformAdmin && (
+                    <span className="inline-block mt-1 px-2 py-0.5 text-xs font-semibold bg-warning-500/20 text-warning-400 rounded">
+                      Platform Admin
+                    </span>
+                  )}
                 </div>
+                {isPlatformAdmin && (
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      navigate("/admin");
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-sm text-warning-300 hover:bg-gradient-to-r hover:from-warning-500/20 hover:to-error-500/20 hover:text-warning-200 transition-all duration-300"
+                    type="button"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z M9 12l2 2 4-4" />
+                    </svg>
+                    <span className="font-medium">Admin Panel</span>
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setShowUserMenu(false);

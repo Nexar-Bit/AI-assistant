@@ -1,24 +1,24 @@
 import { useState, useEffect } from "react";
 import { useNotification } from "../../components/layout/NotificationProvider";
 import {
-  listWorkshops,
-  updateWorkshop,
-  blockWorkshop,
-  unblockWorkshop,
-  deleteWorkshop,
-  type AdminWorkshop,
-  type WorkshopUpdate,
+  fetchWorkshopsAdmin,
+  updateWorkshopAdmin,
+  toggleWorkshopActiveStatusAdmin,
+  deleteWorkshopAdmin,
+  setWorkshopTokenLimitAdmin,
+  type WorkshopAdmin,
+  type UpdateWorkshopAdminRequest,
 } from "../../api/adminWorkshops";
 
 export function WorkshopsManagement() {
   const { showSuccess, showCritical } = useNotification();
-  const [workshops, setWorkshops] = useState<AdminWorkshop[]>([]);
+  const [workshops, setWorkshops] = useState<WorkshopAdmin[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingWorkshop, setEditingWorkshop] = useState<AdminWorkshop | null>(null);
+  const [editingWorkshop, setEditingWorkshop] = useState<WorkshopAdmin | null>(null);
   const [filters, setFilters] = useState({
     is_active: "",
   });
-  const [formData, setFormData] = useState<WorkshopUpdate>({
+  const [formData, setFormData] = useState<UpdateWorkshopAdminRequest>({
     name: "",
     description: "",
     is_active: true,
@@ -33,7 +33,7 @@ export function WorkshopsManagement() {
     setLoading(true);
     try {
       const is_active = filters.is_active === "" ? undefined : filters.is_active === "true";
-      const data = await listWorkshops(is_active);
+      const data = await fetchWorkshopsAdmin({ is_active });
       setWorkshops(data);
     } catch (err: any) {
       console.error("Failed to load workshops:", err);
@@ -47,13 +47,13 @@ export function WorkshopsManagement() {
     if (!editingWorkshop) return;
 
     try {
-      const updateData: WorkshopUpdate = {};
+      const updateData: UpdateWorkshopAdminRequest = {};
       
       if (formData.name && formData.name !== editingWorkshop.name) {
         updateData.name = formData.name;
       }
       if (formData.description !== editingWorkshop.description) {
-        updateData.description = formData.description || null;
+        updateData.description = formData.description || undefined;
       }
       if (formData.is_active !== editingWorkshop.is_active) {
         updateData.is_active = formData.is_active;
@@ -67,7 +67,7 @@ export function WorkshopsManagement() {
         return;
       }
 
-      await updateWorkshop(editingWorkshop.id, updateData);
+      await updateWorkshopAdmin(editingWorkshop.id, updateData);
       showSuccess("Taller actualizado exitosamente", "Éxito");
       setEditingWorkshop(null);
       setFormData({
@@ -83,33 +83,19 @@ export function WorkshopsManagement() {
     }
   };
 
-  const handleBlock = async (workshopId: string, workshopName: string) => {
-    if (!confirm(`¿Estás seguro de que deseas bloquear el taller "${workshopName}"?`)) {
+  const handleToggleActive = async (workshopId: string, workshopName: string, currentlyActive: boolean) => {
+    const action = currentlyActive ? "desactivar" : "activar";
+    if (!confirm(`¿Estás seguro de que deseas ${action} el taller "${workshopName}"?`)) {
       return;
     }
 
     try {
-      await blockWorkshop(workshopId);
-      showSuccess("Taller bloqueado exitosamente", "Éxito");
+      await toggleWorkshopActiveStatusAdmin(workshopId);
+      showSuccess(`Taller ${currentlyActive ? 'desactivado' : 'activado'} exitosamente`, "Éxito");
       loadWorkshops();
     } catch (err: any) {
-      console.error("Failed to block workshop:", err);
-      showCritical(err.response?.data?.detail || "No se pudo bloquear el taller", "Error");
-    }
-  };
-
-  const handleUnblock = async (workshopId: string, workshopName: string) => {
-    if (!confirm(`¿Estás seguro de que deseas desbloquear el taller "${workshopName}"?`)) {
-      return;
-    }
-
-    try {
-      await unblockWorkshop(workshopId);
-      showSuccess("Taller desbloqueado exitosamente", "Éxito");
-      loadWorkshops();
-    } catch (err: any) {
-      console.error("Failed to unblock workshop:", err);
-      showCritical(err.response?.data?.detail || "No se pudo desbloquear el taller", "Error");
+      console.error("Failed to toggle workshop:", err);
+      showCritical(err.response?.data?.detail || `No se pudo ${action} el taller`, "Error");
     }
   };
 
@@ -119,7 +105,7 @@ export function WorkshopsManagement() {
     }
 
     try {
-      await deleteWorkshop(workshopId);
+      await deleteWorkshopAdmin(workshopId);
       showSuccess("Taller eliminado exitosamente", "Éxito");
       loadWorkshops();
     } catch (err: any) {
@@ -128,7 +114,7 @@ export function WorkshopsManagement() {
     }
   };
 
-  const startEdit = (workshop: AdminWorkshop) => {
+  const startEdit = (workshop: WorkshopAdmin) => {
     setEditingWorkshop(workshop);
     setFormData({
       name: workshop.name,
@@ -258,21 +244,16 @@ export function WorkshopsManagement() {
                       >
                         Editar
                       </button>
-                      {workshop.is_active ? (
-                        <button
-                          onClick={() => handleBlock(workshop.id, workshop.name)}
-                          className="text-xs text-warning-400 hover:text-warning-300 transition-colors"
-                        >
-                          Bloquear
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleUnblock(workshop.id, workshop.name)}
-                          className="text-xs text-success-400 hover:text-success-300 transition-colors"
-                        >
-                          Desbloquear
-                        </button>
-                      )}
+                      <button
+                        onClick={() => handleToggleActive(workshop.id, workshop.name, workshop.is_active)}
+                        className={`text-xs transition-colors ${
+                          workshop.is_active 
+                            ? 'text-warning-400 hover:text-warning-300' 
+                            : 'text-success-400 hover:text-success-300'
+                        }`}
+                      >
+                        {workshop.is_active ? 'Desactivar' : 'Activar'}
+                      </button>
                       <button
                         onClick={() => handleDelete(workshop.id, workshop.name)}
                         className="text-xs text-red-400 hover:text-red-300 transition-colors"
