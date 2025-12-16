@@ -32,6 +32,7 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const accessToken = useAuthStore((state) => state.accessToken);
+  const user = useAuthStore((state) => state.user);
   const { can, canAccess } = usePermissions();
 
   // Check authentication
@@ -45,8 +46,15 @@ export function ProtectedRoute({
       return <Navigate to={redirectTo} replace />;
     }
   } else if (requiredRole) {
-    if (!can(requiredRole as any)) {
-      return <Navigate to={redirectTo} replace />;
+    // Special case: platform owner (global role)
+    if (requiredRole === "owner") {
+      if (!user || user.role !== "owner") {
+        return <Navigate to={redirectTo} replace />;
+      }
+    } else {
+      if (!can(requiredRole as any)) {
+        return <Navigate to={redirectTo} replace />;
+      }
     }
   }
 

@@ -67,7 +67,8 @@ export function TopBar() {
   const { currentWorkshop, workshops, setCurrentWorkshop, setWorkshops } = useWorkshopStore();
   const { showSuccess, showCritical } = useNotification();
   
-  const isPlatformAdmin = user?.role === "admin";
+  // Only global owners are considered platform admins
+  const isPlatformAdmin = user?.role === "owner";
   const [showWorkshopMenu, setShowWorkshopMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showHelp, setShowHelp] = useState(false);

@@ -124,7 +124,8 @@ export function Sidebar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hoverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   
-  const isPlatformAdmin = user?.role === "admin";
+  // Only global owners are considered platform admins
+  const isPlatformAdmin = user?.role === "owner";
 
   // Auto-collapse on tablet on mount (only if user hasn't manually toggled)
   useEffect(() => {

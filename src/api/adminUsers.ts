@@ -4,7 +4,7 @@ export interface UserAdmin {
   id: string;
   username: string;
   email: string;
-  role: "admin" | "technician" | "viewer";
+  role: "owner" | "admin" | "technician" | "viewer" | "member";
   is_active: boolean;
   registration_approved: boolean;
   daily_token_limit: number;
@@ -16,7 +16,7 @@ export interface CreateUserAdminRequest {
   username: string;
   email: string;
   password: string;
-  role?: "admin" | "technician" | "viewer";
+  role?: "owner" | "admin" | "technician" | "viewer" | "member";
   is_active?: boolean;
   registration_approved?: boolean;
 }
@@ -24,7 +24,7 @@ export interface CreateUserAdminRequest {
 export interface UpdateUserAdminRequest {
   username?: string;
   email?: string;
-  role?: "admin" | "technician" | "viewer";
+  role?: "owner" | "admin" | "technician" | "viewer" | "member";
   is_active?: boolean;
   registration_approved?: boolean;
 }

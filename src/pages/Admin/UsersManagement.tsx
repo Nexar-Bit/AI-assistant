@@ -219,9 +219,11 @@ export function UsersManagement() {
               className="input-industrial w-full"
             >
               <option value="">Todos</option>
+              <option value="owner">Propietario (super admin)</option>
               <option value="admin">Administrador</option>
               <option value="technician">Técnico</option>
               <option value="viewer">Visualizador</option>
+              <option value="member">Miembro</option>
             </select>
           </div>
           <div>
@@ -292,17 +294,25 @@ export function UsersManagement() {
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
-                        user.role === "admin"
+                        user.role === "owner"
+                          ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                          : user.role === "admin"
                           ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
                           : user.role === "technician"
                           ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                          : user.role === "member"
+                          ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
                           : "bg-gray-500/10 text-gray-400 border border-gray-500/20"
                       }`}
                     >
-                      {user.role === "admin"
+                      {user.role === "owner"
+                        ? "Propietario"
+                        : user.role === "admin"
                         ? "Administrador"
                         : user.role === "technician"
                         ? "Técnico"
+                        : user.role === "member"
+                        ? "Miembro"
                         : "Visualizador"}
                     </span>
                   </td>
@@ -426,15 +436,17 @@ export function UsersManagement() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-industrial-300 mb-2">Rol *</label>
+            <label className="block text-sm font-medium text-industrial-300 mb-2">Rol global *</label>
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
                   className="input-industrial w-full"
                 >
-                  <option value="technician">Técnico</option>
-                  <option value="admin">Administrador</option>
-                  <option value="viewer">Visualizador</option>
+              <option value="owner">Propietario (super admin)</option>
+              <option value="admin">Administrador</option>
+              <option value="technician">Técnico</option>
+              <option value="viewer">Visualizador</option>
+              <option value="member">Miembro</option>
                 </select>
               </div>
 

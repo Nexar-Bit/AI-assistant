@@ -72,7 +72,7 @@ function App() {
               <Route 
                 path="/admin" 
                 element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requiredRole="owner">
                     <AdminPage />
                   </ProtectedRoute>
                 } 
@@ -80,7 +80,7 @@ function App() {
               <Route 
                 path="/admin/registrations" 
                 element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requiredRole="owner">
                     <RegistrationManagement />
                   </ProtectedRoute>
                 } 
@@ -88,7 +88,7 @@ function App() {
               <Route 
                 path="/admin/workshops/:workshopId" 
                 element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requiredRole="owner">
                     <WorkshopDetailView />
                   </ProtectedRoute>
                 } 
